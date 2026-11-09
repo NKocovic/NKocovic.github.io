@@ -859,60 +859,131 @@ a.tier-item.has-tip {
 }
 
 .site-name.is-equation {
+  position: relative;
   cursor: pointer;
 }
 
+.site-name.is-orbiting .ch {
+  transition: none;
+  will-change: transform, opacity;
+}
+
+/* the moment the letters collapse: a soft burst of light */
+.eq-flash {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1.4em;
+  height: 1.4em;
+  margin: -0.7em 0 0 -0.7em;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 65%);
+  pointer-events: none;
+  animation: eq-flash 0.9s var(--ease-out) both;
+}
+
+@keyframes eq-flash {
+  0% { transform: scale(0.1); opacity: 1; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+
+/* Hamilton's equations: q̇ = {q, ℋ}, ṗ = {p, ℋ}, beside a phase portrait */
 .eq {
   display: inline-flex;
   align-items: center;
-  gap: 0.12em;
-  font-style: italic;
+  gap: 0.4em;
   white-space: nowrap;
+}
+
+.eq-lines {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.02em;
+  font-size: 0.6em;
+  line-height: 1.15;
+}
+
+.eq-line {
+  display: inline-flex;
+  align-items: baseline;
 }
 
 .eq-bit {
   display: inline-block;
   animation: write-in 0.8s var(--ease-out) both;
-  animation-delay: calc(120ms + var(--i, 0) * 110ms);
+  animation-delay: calc(350ms + var(--i, 0) * 85ms);
 }
 
 @keyframes write-in {
   from { opacity: 0; transform: translateY(10px); filter: blur(6px); }
 }
 
-.eq-frac {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 0.5em;
-  line-height: 1.15;
-}
-
-.eq-num {
-  padding: 0 0.2em 0.06em;
-  border-bottom: 0.07em solid currentColor;
-}
-
-.eq-den {
-  padding-top: 0.06em;
-}
-
-.eq-paren {
-  font-style: normal;
-  font-weight: 400;
-  transform: scaleY(1.35);
-  color: var(--muted);
+.eq-var {
+  font-style: italic;
 }
 
 .eq-op {
-  font-style: normal;
-  margin: 0 0.12em;
-  font-size: 0.8em;
+  margin: 0 0.28em;
+  color: var(--muted);
 }
 
-.site-name.is-equation .eq-bit:last-child {
-  font-style: normal;
-  font-size: 0.8em;
+.eq-brace {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.eq-comma {
+  margin-right: 0.22em;
+  color: var(--muted);
+}
+
+.eq-ham {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.eq-phase svg {
+  display: block;
+  width: 1.7em;
+  height: auto;
+  overflow: visible;
+}
+
+.ph-axis {
+  fill: none;
+  stroke: var(--underline);
+  stroke-width: 0.8;
+  stroke-linecap: round;
+}
+
+.ph-label {
+  font: italic 7px var(--serif);
+  fill: var(--muted);
+}
+
+/* the orbit draws itself, then the point (with a fading tail) starts moving along it */
+.ph-orbit {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: ph-draw 1.1s var(--ease-in-out) 1.7s forwards;
+}
+
+@keyframes ph-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.ph-dot {
+  fill: var(--accent);
+  opacity: 0;
+  animation: ph-show 0.4s ease forwards;
+  animation-delay: var(--d);
+}
+
+@keyframes ph-show {
+  to { opacity: var(--o, 1); }
 }
 
 .intro > .egg-note {

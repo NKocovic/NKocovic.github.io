@@ -81,43 +81,93 @@
     return e;
   }
 
-  function frac(top, bottom) {
-    var f = el('span', 'eq-frac eq-bit');
-    f.appendChild(el('span', 'eq-num', top));
-    f.appendChild(el('span', 'eq-den', bottom));
-    return f;
+  // 1) the fed letters gather into a ring, orbit faster and faster, and collapse into a point
+  function becomeEquation() {
+    var box = nameEl.getBoundingClientRect();
+    var cx = box.left + box.width / 2;
+    var cy = box.top + box.height / 2;
+    var rx = Math.min(box.width / 2, 170);
+    var ry = box.height * 0.55;
+    var items = letters.map(function (l, i) {
+      var r = l.getBoundingClientRect();
+      return { el: l, ox: r.left + r.width / 2, oy: r.top + r.height / 2, a0: Math.PI + (i / letters.length) * Math.PI * 2 };
+    });
+    var GATHER = 900;
+    var COLLAPSE = 1500;
+    var t0 = performance.now();
+    var ease = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+
+    nameEl.classList.add('is-orbiting');
+    function frame(now) {
+      var t = now - t0;
+      var g = ease(Math.min(1, t / GATHER));
+      var k = Math.max(0, Math.min(1, (t - GATHER) / COLLAPSE));
+      var spin = Math.pow(k, 1.7) * Math.PI * 3.2 + g * 0.6; // speeds up as the ring tightens
+      var shrink = 1 - k * k;
+      items.forEach(function (it) {
+        var a = it.a0 + spin;
+        var tx = cx + rx * shrink * Math.cos(a);
+        var ty = cy + ry * shrink * Math.sin(a);
+        var x = it.ox + (tx - it.ox) * g;
+        var y = it.oy + (ty - it.oy) * g;
+        it.el.style.transform = 'translate(' + (x - it.ox).toFixed(1) + 'px,' + (y - it.oy).toFixed(1) + 'px) scale(' + (1 - 0.65 * k).toFixed(3) + ')';
+        it.el.style.opacity = String(1 - Math.max(0, (k - 0.6) / 0.4));
+      });
+      if (t < GATHER + COLLAPSE) requestAnimationFrame(frame);
+      else showEquation();
+    }
+    requestAnimationFrame(frame);
   }
 
-  function becomeEquation() {
-    nameEl.classList.add('is-leaving');
-    setTimeout(function () {
-      nameEl.classList.remove('is-leaving');
-      nameEl.textContent = '';
-      nameEl.classList.add('is-equation');
-      nameEl.setAttribute('aria-label', 'd/dt (∂L/∂q̇) − ∂L/∂q = 0, the Euler–Lagrange equation');
-      var eq = el('span', 'eq');
-      eq.setAttribute('aria-hidden', 'true');
-      [
-        frac('d', 'dt'),
-        el('span', 'eq-paren eq-bit', '('),
-        frac('∂ℒ', '∂q̇'),
-        el('span', 'eq-paren eq-bit', ')'),
-        el('span', 'eq-op eq-bit', '−'),
-        frac('∂ℒ', '∂q'),
-        el('span', 'eq-op eq-bit', '='),
-        el('span', 'eq-bit', '0')
-      ].forEach(function (bit, i) {
-        bit.style.setProperty('--i', i);
-        eq.appendChild(bit);
-      });
-      nameEl.appendChild(eq);
-      nameEl.title = sr ? 'Klikni da vratiš ime' : 'Click to get my name back';
+  // 2) a flash, then Hamilton's equations in Poisson-bracket form write themselves in,
+  //    next to a phase portrait whose orbit draws itself and a point starts moving along it
+  function showEquation() {
+    nameEl.classList.remove('is-orbiting');
+    nameEl.textContent = '';
+    nameEl.classList.add('is-equation');
+    nameEl.setAttribute('aria-label', "q dot equals the Poisson bracket of q and H; p dot equals the Poisson bracket of p and H. Hamilton's equations.");
+    nameEl.title = sr ? 'Klikni da vratiš ime' : 'Click to get my name back';
 
-      var note = el('p', 'egg-note',
-        sr ? 'Sva slova nahranjena. Dejstvo je stacionarno. (Klikni na jednačinu da vratiš ime.)'
-           : 'Every letter fed. The action is stationary. (Click the equation to get my name back.)');
-      nameEl.insertAdjacentElement('afterend', note);
-    }, 700);
+    nameEl.appendChild(el('span', 'eq-flash'));
+    var eq = el('span', 'eq');
+    eq.setAttribute('aria-hidden', 'true');
+    var lines = el('span', 'eq-lines');
+    var idx = 0;
+    function line(v) {
+      var ln = el('span', 'eq-line');
+      [[v + '̇', 'var'], ['=', 'op'], ['{', 'brace'], [v, 'var'], [',', 'comma'], ['ℋ', 'ham'], ['}', 'brace']]
+        .forEach(function (p) {
+          var b = el('span', 'eq-bit eq-' + p[1], p[0]);
+          b.style.setProperty('--i', idx++);
+          ln.appendChild(b);
+        });
+      return ln;
+    }
+    lines.appendChild(line('q'));
+    lines.appendChild(line('p'));
+    eq.appendChild(lines);
+
+    var phase = el('span', 'eq-phase eq-bit');
+    phase.style.setProperty('--i', idx);
+    var orbit = 'M20,0 A20,13 0 1,1 -20,0 A20,13 0 1,1 20,0';
+    var dot = function (r, o, begin) {
+      return '<circle class="ph-dot" r="' + r + '" style="--o:' + o + ';--d:' + begin + 's">' +
+        '<animateMotion dur="3.4s" repeatCount="indefinite" begin="' + begin + 's" path="' + orbit + '"/></circle>';
+    };
+    phase.innerHTML =
+      '<svg viewBox="-30 -24 60 48" aria-hidden="true" focusable="false">' +
+      '<path class="ph-axis" d="M-27 0H26M0 21V-20"/>' +
+      '<text class="ph-label" x="24" y="8">q</text><text class="ph-label" x="3" y="-15">p</text>' +
+      '<ellipse class="ph-orbit" rx="20" ry="13" pathLength="100"/>' +
+      dot(1.2, 0.2, 2.9) + dot(1.8, 0.45, 2.82) + dot(2.6, 1, 2.74) +
+      '</svg>';
+    eq.appendChild(phase);
+    nameEl.appendChild(eq);
+
+    var note = el('p', 'egg-note',
+      sr ? 'Sva slova nahranjena. Sistem sada evoluira pod ℋ. (Klikni na jednačine da vratiš ime.)'
+         : 'Every letter fed. The system now evolves under ℋ. (Click the equations to get my name back.)');
+    nameEl.insertAdjacentElement('afterend', note);
   }
 
   if (nameEl) {
