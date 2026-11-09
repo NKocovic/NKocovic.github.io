@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nikola Kočović</title>
+  <meta name="description" content="Nikola Kočović — maturant Matematičke gimnazije u Beogradu. Fizika, muzika i dobra hrana.">
+  <link rel="alternate" hreflang="en" href="../">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <script>
+    // Runs before the first paint: switches the animations on, and off again if site.js never loads.
+    document.documentElement.classList.add('js');
+    window.__revealFailsafe = setTimeout(function () { document.documentElement.classList.remove('js'); }, 2500);
+    // Page transitions: slide forward into the blog, back out of it, cross-fade between languages.
+    addEventListener('pagereveal', function (e) {
+      if (!e.viewTransition) return;
+      e.viewTransition.ready.catch(function () {}); // a skipped transition (e.g. a quick second click) is fine
+      document.documentElement.classList.add('no-intro');
+      try {
+        var depth = function (u) { var p = new URL(u).pathname; return /\/blog\/post\.html$/.test(p) ? 2 : /\/blog\//.test(p) ? 1 : 0; };
+        var from = navigation.activation.from;
+        if (from) {
+          var d = depth(location.href) - depth(from.url);
+          e.viewTransition.types.add(d > 0 ? 'forward' : d < 0 ? 'back' : 'swap');
+        }
+      } catch (err) {}
+    });
+    addEventListener('pageswap', function (e) {
+      if (e.viewTransition) e.viewTransition.ready.catch(function () {});
+    });
+  </script>
+  <script src="../site.js" defer></script>
+  <script src="../sushi.js" defer></script>
+</head>
+<body>
+  <!-- Serbian version of ../index.html. Keep the two pages in step when you edit either. -->
+  <main class="page">
+
+    <!-- ===== Uvod: ime, jedna rečenica o tebi i linkovi ===== -->
+    <header class="intro">
+      <nav class="top-nav" aria-label="Sajt">
+        <a class="nav-blog vt-blog" href="blog/">Blog</a>
+        <span class="lang">
+          <a href="../" hreflang="en" lang="en">EN</a>
+          <span aria-current="true">SR</span>
+        </span>
+      </nav>
+      <h1 class="site-name">Nikola Kočović</h1>
+      <p class="lede">Maturant sam iz Beograda i trenutno konkurišem na fakultete. Volim fiziku, muziku i dobru hranu.</p>
+      <ul class="links">
+        <li><a href="mailto:koljakocovic1@gmail.com">Imejl</a></li>
+        <li><a href="https://github.com/NKocovic">GitHub</a></li>
+        <li><a href="../cv-sr.pdf">CV</a></li>
+      </ul>
+      <!-- Suši na traci, pogled sa strane. Igračka je (../sushi.js): povuci ili baci komad, klikni ga da skoči, klikni traku za turbo. Isti crtež je i u ../index.html. -->
+      <div class="sushi-toy">
+        <span class="sushi-hint" aria-hidden="true">nahrani moje ime sušijem</span>
+      <svg class="sushi-line" viewBox="0 0 160 52" aria-hidden="true" focusable="false">
+        <defs>
+          <g id="sl-salmon">
+            <rect x="-9" y="-2" width="18" height="2" rx="1" fill="#a9cbff"/>
+            <rect x="-6.5" y="-7.6" width="13" height="5.8" rx="2.7" fill="#fffaf0" stroke="currentColor" stroke-width=".6"/>
+            <rect x="-8" y="-10.8" width="16" height="4.2" rx="2.1" fill="#f6865a" stroke="currentColor" stroke-width=".6"/>
+            <path d="M-4.4-10.4l1.4 3.4M-.4-10.6l1.4 3.6M3.6-10.4l1.4 3.4" stroke="#ffe1d2" stroke-width=".8" stroke-linecap="round" fill="none"/>
+          </g>
+          <g id="sl-maki">
+            <rect x="-9" y="-2" width="18" height="2" rx="1" fill="#ffe08a"/>
+            <rect x="-5" y="-11" width="10" height="9.2" rx="1.6" fill="#1f2b24" stroke="currentColor" stroke-width=".6"/>
+            <ellipse cx="0" cy="-11" rx="5" ry="1.5" fill="#fffaf0" stroke="currentColor" stroke-width=".6"/>
+            <ellipse cx="-.7" cy="-11" rx="1.7" ry=".6" fill="#f6865a"/>
+            <ellipse cx="1.9" cy="-11.2" rx=".8" ry=".35" fill="#7cbf5a"/>
+          </g>
+          <g id="sl-tamago">
+            <rect x="-9" y="-2" width="18" height="2" rx="1" fill="#ff9b94"/>
+            <rect x="-6.5" y="-7.6" width="13" height="5.8" rx="2.7" fill="#fffaf0" stroke="currentColor" stroke-width=".6"/>
+            <rect x="-7.6" y="-11.2" width="15.2" height="4.2" rx="1.2" fill="#f6cc4a" stroke="currentColor" stroke-width=".6"/>
+            <rect x="-1.4" y="-11.8" width="2.8" height="10" rx=".6" fill="#1f2b24"/>
+          </g>
+          <g id="sl-tuna">
+            <rect x="-9" y="-2" width="18" height="2" rx="1" fill="#bfe3a0"/>
+            <rect x="-6.5" y="-7.6" width="13" height="5.8" rx="2.7" fill="#fffaf0" stroke="currentColor" stroke-width=".6"/>
+            <rect x="-8" y="-10.8" width="16" height="4.2" rx="2.1" fill="#d43d4f" stroke="currentColor" stroke-width=".6"/>
+            <path d="M-4.4-10.4l1.4 3.4M-.4-10.6l1.4 3.6M3.6-10.4l1.4 3.4" stroke="#f5aab3" stroke-width=".8" stroke-linecap="round" fill="none"/>
+          </g>
+        </defs>
+        <path class="sl-legs" d="M36 43v5.5M124 43v5.5M31 48.5h10M119 48.5h10"/>
+        <path class="sl-belt" d="M20 30H140a6 6 0 0 1 0 12H20a6 6 0 0 1 0-12Z"/>
+        <path class="sl-tread" d="M20 30H140a6 6 0 0 1 0 12H20a6 6 0 0 1 0-12Z"/>
+        <circle class="sl-roller" cx="20" cy="36" r="3.6"/>
+        <circle class="sl-roller" cx="140" cy="36" r="3.6"/>
+        <path class="sl-spokes" d="M20 33.4v5.2M17.4 36h5.2"/>
+        <path class="sl-spokes" d="M140 33.4v5.2M137.4 36h5.2"/>
+        <use class="sl-piece" href="#sl-salmon"/>
+        <use class="sl-piece" href="#sl-maki"/>
+        <use class="sl-piece" href="#sl-tamago"/>
+        <use class="sl-piece" href="#sl-tuna"/>
+      </svg>
+      </div>
+    </header>
+
+    <!-- ===== O meni ===== -->
+    <section>
+      <h2>O meni</h2>
+      <div class="prose">
+        <p>Završavam Matematičku gimnaziju u Beogradu i spremam se za fakultet.</p>
+        <p>Najviše vremena posvećujem fizici: takmičenjima, istraživanju i pisanju materijala za druge učenike. Pored toga, volim klasičnu muziku i džez, tenis i još mnogo toga.</p>
+      </div>
+    </section>
+
+    <!-- ===== Blog: najnovije objave se pojavljuju same (site.js čita ../blog/posts.json) ===== -->
+    <section>
+      <h2>Blog</h2>
+      <div>
+        <ul class="entries" id="latest-posts" data-posts="../blog/" data-link="blog/" hidden></ul>
+        <p class="teaser" id="blog-teaser">Pišem o fizici, muzici, hrani i svemu ostalom.</p>
+        <p class="cta-links">
+          <a class="btn" href="blog/" data-vt-blog>Pročitaj blog <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="blog/#tierlists">Tier liste <span class="arrow" aria-hidden="true">→</span></a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== Iskustvo: stavke u .more su skrivene dok se ne klikne „Prikaži još“ ===== -->
+    <section>
+      <h2>Iskustvo</h2>
+      <div>
+        <ul class="entries">
+          <li>
+            <div class="entry-head">
+              <span class="entry-title">Autor zadataka, AIPhO</span>
+              <span class="meta">nov 2026 – danas</span>
+            </div>
+            <p>Pišem zadatke iz fizike za benchmark na kojem će se testirati budući AI modeli.</p>
+          </li>
+          <li>
+            <div class="entry-head">
+              <span class="entry-title">Istraživačka praksa, AriesAI</span>
+              <span class="meta">okt 2026 – danas</span>
+            </div>
+            <p>Automatsko prepoznavanje srpskog govora: pronalaženje i čišćenje skupova podataka, testiranje Whisper modela i razvoj metrike za ocenu kvaliteta transkripata.</p>
+          </li>
+        </ul>
+        <div class="more" id="more-experience">
+          <div class="more-inner">
+            <ul class="entries">
+              <li>
+                <div class="entry-head">
+                  <span class="entry-title">Dodatna nastava iz fizike, Matematička gimnazija</span>
+                  <span class="meta">2026 – danas</span>
+                </div>
+                <p>Držim časove dodatne nastave učenicima koji se spremaju za olimpijade.</p>
+              </li>
+              <li>
+                <div class="entry-head">
+                  <span class="entry-title">Privatni časovi</span>
+                  <span class="meta">mar 2024 – danas</span>
+                </div>
+                <p>Fizika i matematika za učenike naprednog nivoa.</p>
+              </li>
+              <li>
+                <div class="entry-head">
+                  <a class="entry-title" href="https://akronolo.rs">Akronolo</a>
+                  <span class="meta">avg 2023 – danas</span>
+                </div>
+                <p>Napravio sam sajt kompanije od nule i održavam ga.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <button class="more-toggle" type="button" aria-expanded="false" aria-controls="more-experience" data-more="Prikaži još" data-less="Prikaži manje">
+          <span class="more-label">Prikaži još</span>
+          <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===== Takmičenja: IPhO se vidi; ostala se otvaraju dugmetom ===== -->
+    <section>
+      <h2>Takmičenja</h2>
+      <div>
+        <ul class="entries">
+          <li>
+            <div class="entry-head">
+              <a class="entry-title" href="https://ipho-unofficial.org/timeline/2026/individual">Međunarodna fizička olimpijada (IPhO)</a>
+              <span class="meta">2026</span>
+            </div>
+            <p>Srebrna medalja, Kolumbija.</p>
+          </li>
+        </ul>
+        <div class="more" id="more-competitions">
+          <div class="more-inner">
+            <ul class="entries">
+              <li>
+                <div class="entry-head">
+                  <a class="entry-title" href="https://www.df.uns.ac.rs/takmicenjefizikasrednje/IPhO.html">Međunarodni turnir mladih fizičara (IYPT)</a>
+                  <span class="meta">2026</span>
+                </div>
+                <p>Plasman na svetsko finale u Cirihu.</p>
+              </li>
+              <li>
+                <div class="entry-head">
+                  <a class="entry-title" href="https://nbpho.ee/wp-content/uploads/2026/04/NBPhO-2026-results.pdf">Nordijsko-baltička fizička olimpijada (NBPhO)</a>
+                  <span class="meta">2026</span>
+                </div>
+                <p>Zlatna medalja, 10. mesto među 120+ takmičara.</p>
+              </li>
+              <li>
+                <div class="entry-head">
+                  <a class="entry-title" href="https://fyziklani.org/2026/results/">Fyziklani</a>
+                  <span class="meta">2026</span>
+                </div>
+                <p>1. mesto među 300+ timova.</p>
+              </li>
+              <li>
+                <div class="entry-head">
+                  <a class="entry-title" href="https://www.df.uns.ac.rs/takmicenjefizikasrednje/Documents/2026/SFO%20BPO/2026%20SFO%20ukupno.pdf">Srpska fizička olimpijada</a>
+                  <span class="meta">2026</span>
+                </div>
+                <p>2. nagrada u konkurenciji 4. razreda, kao učenik 3. razreda.</p>
+              </li>
+              <li>
+                <div class="entry-head">
+                  <a class="entry-title" href="https://physicsbrawl.org/2025/results/">Physics Brawl Online</a>
+                  <span class="meta">2025</span>
+                </div>
+                <p>4. mesto među 1000+ timova.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <button class="more-toggle" type="button" aria-expanded="false" aria-controls="more-competitions" data-more="Prikaži sva takmičenja" data-less="Prikaži manje">
+          <span class="more-label">Prikaži sva takmičenja</span>
+          <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===== Materijali: PDF-ovi su u folderu ../handouts/ ===== -->
+    <section>
+      <h2>Materijali</h2>
+      <ul class="entries">
+        <li>
+          <div class="entry-head">
+            <a class="entry-title" href="../handouts/W1-wave-optics.pdf">Dve teme iz talasne optike</a>
+            <span class="meta">sep 2026</span>
+          </div>
+          <p>Fazorski dijagrami i Furijeova optika. Koautor: Luka Smiljanić.</p>
+          <p class="entry-links"><a href="../handouts/W1-wave-optics.pdf" hreflang="en">Engleski</a></p>
+        </li>
+        <li>
+          <div class="entry-head">
+            <a class="entry-title" href="../handouts/E1-elektrostatika-sr.pdf">Elektrostatika</a>
+            <span class="meta">maj 2026</span>
+          </div>
+          <p>Priprema za Balkansku fizičku olimpijadu.</p>
+          <p class="entry-links"><a href="../handouts/E1-elektrostatika-sr.pdf">Srpski</a><a href="../handouts/E1-electrostatics-en.pdf" hreflang="en">Engleski</a></p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ===== Van fizike: sve teme se vide; klik otvara opis ===== -->
+    <section>
+      <h2>Van fizike</h2>
+      <ul class="entries accordion">
+        <li>
+          <button class="expand-head" type="button" aria-expanded="false" aria-controls="outside-music">
+            <span class="entry-title">Muzika</span>
+            <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="expand-body" id="outside-music">
+            <div class="expand-inner">
+              <p>Sviram klavir i gitaru i pevam operu. <a href="https://www.mg.edu.rs/sr/vesti/2026/05/krf-i-vido-ostrva-secanja-bola-i-ponosa">Nastupao sam u zemlji i inostranstvu</a>, između ostalog i <a href="https://www.tiktok.com/@matgimtv/video/7688061055674731797">sa Gocom Tržan</a> (lol), a učestvujem i na školskim <a href="https://www.youtube.com/watch?v=zj7vTmDS2PU">koncertima</a> i u <a href="https://www.youtube.com/watch?v=JqzqeaQopqA">predstavama</a>. Komponujem, a na Drugom memorijalnom takmičenju „Andrija Čikić“ bio sam <a href="https://www.kolarac.rs/koncerti/polufinalisti-drugog-memorijalnog-takmicenja-andrija-cikic/">polufinalista</a>.</p>
+            </div>
+          </div>
+        </li>
+        <li>
+          <button class="expand-head" type="button" aria-expanded="false" aria-controls="outside-writing">
+            <span class="entry-title">Pisanje i slikanje</span>
+            <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="expand-body" id="outside-writing">
+            <div class="expand-inner">
+              <p>Pišem pesme i <a href="https://svetionik.hilandar.org/konkurs/%d0%bd%d0%b8%d0%ba%d0%be%d0%bb%d0%b0-%d0%ba%d0%be%d1%87%d0%be%d0%b2%d0%b8%d1%9b-3%d0%b1-%d1%80%d0%b0%d0%b7%d1%80%d0%b5%d0%b4-%d0%bc%d0%b0%d1%82%d0%b5%d0%bc%d0%b0%d1%82%d0%b8%d1%87%d0%ba%d0%b0-%d0%b3/">pobedio sam na konkursu</a> čija je nagrada bila poseta Hilandaru. Takođe slikam.</p>
+            </div>
+          </div>
+        </li>
+        <li>
+          <button class="expand-head" type="button" aria-expanded="false" aria-controls="outside-sport">
+            <span class="entry-title">Sport</span>
+            <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="expand-body" id="outside-sport">
+            <div class="expand-inner">
+              <p>Tenis, skijanje, golf i karate (crni pojas, 1. dan).</p>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <footer class="footer">
+      <span>&copy; 2026 Nikola Kočović</span>
+    </footer>
+
+  </main>
+</body>
+</html>

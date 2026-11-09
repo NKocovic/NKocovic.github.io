@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog — Nikola Kočović</title>
+  <meta name="description" content="Blog Nikole Kočovića: fizika, muzika, hrana i sve ostalo, i tier liste.">
+  <meta name="blog-base" content="../../blog/">
+  <link rel="alternate" hreflang="en" href="../../blog/">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../style.css">
+  <script>
+    document.documentElement.classList.add('js');
+    window.__revealFailsafe = setTimeout(function () { document.documentElement.classList.remove('js'); }, 2500);
+    // Page transitions: slide forward into the blog, back out of it, cross-fade between languages.
+    addEventListener('pagereveal', function (e) {
+      if (!e.viewTransition) return;
+      e.viewTransition.ready.catch(function () {}); // a skipped transition (e.g. a quick second click) is fine
+      document.documentElement.classList.add('no-intro');
+      try {
+        var depth = function (u) { var p = new URL(u).pathname; return /\/blog\/post\.html$/.test(p) ? 2 : /\/blog\//.test(p) ? 1 : 0; };
+        var from = navigation.activation.from;
+        if (from) {
+          var d = depth(location.href) - depth(from.url);
+          e.viewTransition.types.add(d > 0 ? 'forward' : d < 0 ? 'back' : 'swap');
+        }
+      } catch (err) {}
+    });
+    addEventListener('pageswap', function (e) {
+      if (e.viewTransition) e.viewTransition.ready.catch(function () {});
+    });
+  </script>
+  <script src="../../site.js" defer></script>
+  <script src="../../blog/blog.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="intro">
+      <nav class="top-nav" aria-label="Sajt">
+        <a class="nav-blog" href="./" aria-current="page">Blog</a>
+        <span class="lang">
+          <a href="../../blog/" hreflang="en" lang="en">EN</a>
+          <span aria-current="true">SR</span>
+        </span>
+      </nav>
+      <a class="home-link" href="../">Nikola Kočović</a>
+      <h1 class="vt-blog">Blog</h1>
+      <p class="lede">Pišem o svemu: fizici, muzici, hrani i svemu ostalom što mi padne na pamet. Tu su i moje tier liste.</p>
+      <p class="jump-links"><a href="#posts">Objave</a><a href="#tierlists">Tier liste</a></p>
+    </header>
+
+    <section id="posts">
+      <h2>Objave</h2>
+      <div>
+        <ul class="entries" id="post-list"></ul>
+        <p class="empty" id="post-empty" hidden></p>
+      </div>
+    </section>
+
+    <!-- Tier liste: svi podaci su u ../../blog/tierlists.json (vidi README.md) -->
+    <section id="tierlists">
+      <h2>Tier liste</h2>
+      <div class="tierlists" id="tierlists-box"></div>
+    </section>
+
+    <footer class="footer">
+      <span>&copy; 2026 Nikola Kočović</span>
+    </footer>
+  </main>
+</body>
+</html>

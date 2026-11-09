@@ -1,0 +1,1079 @@
+/* ---------- Colors, fonts and motion (change these to restyle the whole site) ---------- */
+:root {
+  --bg: #fbfaf7;
+  --text: #1b1b19;
+  --muted: #66655f;
+  --rule: #e4e2dc;
+  --underline: #c4c1b8;
+  --accent: #2648b8;
+  --code-bg: #f0eee8;
+
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #131312;
+    --text: #ebeae5;
+    --muted: #9b9a94;
+    --rule: #2b2b28;
+    --underline: #5c5b56;
+    --accent: #93a9ff;
+    --code-bg: #1d1d1b;
+  }
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--underline);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---------- Layout ---------- */
+.page {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 112px 24px 64px;
+}
+
+.intro {
+  padding-bottom: 64px;
+}
+
+h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(2.5rem, 7vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+}
+
+.site-name {
+  view-transition-name: site-name;
+}
+
+.lede {
+  font-size: 1.125rem;
+  color: var(--muted);
+  max-width: 34em;
+  margin: 0 0 24px;
+}
+
+.links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+/* top right: Blog link and language switch */
+.top-nav {
+  position: absolute;
+  top: 40px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  view-transition-name: top-nav;
+}
+
+.top-nav .lang {
+  display: flex;
+  gap: 12px;
+}
+
+.top-nav [aria-current] {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+/* the Blog link is a pill so it stands out from the language switch */
+.top-nav .nav-blog {
+  padding: 4px 14px;
+  border: 1px solid var(--text);
+  border-radius: 999px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.top-nav .nav-blog:hover,
+.top-nav .nav-blog:focus-visible {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.top-nav .nav-blog[aria-current] {
+  border-color: var(--rule);
+  background: none;
+  color: var(--muted);
+}
+
+/* small name, top left, on the blog pages */
+.home-link {
+  position: absolute;
+  top: 36px;
+  left: 24px;
+  font-family: var(--serif);
+  font-size: 1.125rem;
+  font-weight: 500;
+  text-decoration: none;
+  view-transition-name: site-name;
+}
+
+section {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 24px;
+  padding: 40px 0;
+  border-top: 1px solid var(--rule);
+}
+
+h2 {
+  margin: 0;
+  padding-top: 3px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.prose p {
+  margin: 0 0 16px;
+  max-width: 36em;
+}
+
+.prose p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Lists of entries ---------- */
+.entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 28px;
+}
+
+.entry-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.entry-title {
+  font-weight: 500;
+}
+
+.entries p {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.entries .entry-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 6px;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.meta {
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 5px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  vertical-align: 2px;
+}
+
+.empty {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ---------- "Show more" lists ---------- */
+/* Without JavaScript everything is simply shown and the button is hidden. */
+.more-toggle {
+  display: none;
+}
+
+.js .more {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.55s var(--ease-out);
+}
+
+.js .more.is-open {
+  grid-template-rows: 1fr;
+}
+
+.more-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.more-inner > .entries {
+  padding-top: 28px;
+}
+
+.js .more li {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.35s ease, transform 0.45s var(--ease-out);
+}
+
+.js .more.is-open li {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(60ms + var(--i, 0) * 45ms);
+}
+
+.js .more-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.more-toggle:hover {
+  color: var(--text);
+}
+
+.more-toggle .chev {
+  width: 10px;
+  height: 10px;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.more-toggle[aria-expanded="true"] .chev {
+  transform: rotate(180deg);
+}
+
+/* ---------- Blog posts ---------- */
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 0 0 14px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.post-title {
+  font-size: clamp(2rem, 5.5vw, 2.75rem);
+}
+
+.post {
+  max-width: 640px;
+  margin-bottom: 56px;
+  padding-top: 40px;
+  border-top: 1px solid var(--rule);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+.post > :first-child {
+  margin-top: 0;
+}
+
+.post p,
+.post ul,
+.post ol,
+.post blockquote,
+.post pre,
+.post figure,
+.post table {
+  margin: 0 0 1.15em;
+}
+
+.post h2,
+.post h3 {
+  padding: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--text);
+  line-height: 1.25;
+  margin: 1.8em 0 0.6em;
+}
+
+.post h2 {
+  font-size: 1.6rem;
+}
+
+.post h3 {
+  font-size: 1.25rem;
+}
+
+.post img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.post blockquote {
+  margin-left: 0;
+  padding-left: 1em;
+  border-left: 2px solid var(--rule);
+  color: var(--muted);
+}
+
+.post code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--code-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+.post pre {
+  background: var(--code-bg);
+  padding: 14px 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  line-height: 1.55;
+}
+
+.post pre code {
+  background: none;
+  padding: 0;
+}
+
+.post hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 2em 0;
+}
+
+.post .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 0;
+}
+
+/* ---------- Home: blog teaser and arrow links ---------- */
+.teaser {
+  margin: 0;
+  max-width: 34em;
+}
+
+.teaser + .cta-links {
+  margin-top: 14px;
+}
+
+/* once posts are listed, the teaser is hidden and the links sit a bit lower */
+#latest-posts:not([hidden]) ~ .cta-links {
+  margin-top: 24px;
+}
+
+.cta-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.cta-links a {
+  text-decoration: none;
+}
+
+.cta-links .arrow {
+  display: inline-block;
+  transition: transform 0.35s var(--ease-out);
+}
+
+.cta-links a:hover .arrow,
+.cta-links a:focus-visible .arrow {
+  transform: translateX(4px);
+}
+
+/* ---------- Tier lists (on the blog page) ---------- */
+.tierlist + .tierlist {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid var(--rule);
+}
+
+/* the rows slide in once the section has scrolled into view */
+.js section:not(.is-in) .tier {
+  animation-play-state: paused;
+}
+
+.tierlist-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.tierlist h3 {
+  margin: 0;
+  padding: 0;
+  font-family: var(--serif);
+  font-size: 1.375rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  text-transform: none;
+  color: var(--text);
+}
+
+.tierlist-note {
+  margin: 6px 0 0;
+  max-width: 36em;
+  color: var(--muted);
+}
+
+.tiers {
+  display: grid;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.tier {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 14px;
+  align-items: center;
+  min-height: 44px;
+  animation: rise 0.6s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+.tier-label {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--tier, #c9c6be);
+  color: #1b1b19;
+  font-weight: 600;
+}
+
+.tier[data-tier="S"] { --tier: #ff9b94; }
+.tier[data-tier="A"] { --tier: #ffbf86; }
+.tier[data-tier="B"] { --tier: #ffe08a; }
+.tier[data-tier="C"] { --tier: #bfe3a0; }
+.tier[data-tier="D"] { --tier: #a9cbff; }
+.tier[data-tier="E"] { --tier: #cdb8f5; }
+.tier[data-tier="F"] { --tier: #c9c6be; }
+
+.tier-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tier-item {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.35s var(--ease-out), color 0.2s ease;
+}
+
+a.tier-item:hover,
+a.tier-item:focus-visible {
+  border-color: currentColor;
+  transform: translateY(-2px);
+}
+
+.tier-item[title] {
+  cursor: help;
+}
+
+a.tier-item[title] {
+  cursor: pointer;
+}
+
+.tier-empty {
+  color: var(--underline);
+}
+
+/* ---------- Sushi conveyor (home page header, side view) ----------
+   Belt treads, rollers and pieces all move at ~18 units/s, so it reads as one machine.
+   Each piece drops on at the left, rides across and tips off over the right roller. */
+/* the conveyor is a toy (sushi.js); a small hint slides in on hover until you've played with it */
+.sushi-toy {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  width: max-content;
+  margin: 4px 0 -24px auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.sushi-hint {
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--muted);
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 0.35s ease, transform 0.55s var(--ease-out);
+  pointer-events: none;
+}
+
+.js .sushi-toy:hover .sushi-hint {
+  opacity: 1;
+  transform: none;
+}
+
+@media (hover: none) {
+  .js .sushi-hint {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.js .sushi-toy.played .sushi-hint {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+.sushi-line {
+  display: block;
+  width: 150px;
+  height: auto;
+  overflow: visible;
+  color: var(--text); /* line colour */
+}
+
+/* once sushi.js is running it moves everything itself */
+.sushi-line.is-live .sl-piece,
+.sushi-line.is-live .sl-tread,
+.sushi-line.is-live .sl-spokes {
+  animation: none;
+}
+
+.sushi-line.is-live .sl-piece {
+  cursor: grab;
+  touch-action: none;
+}
+
+.sushi-line.is-live .sl-piece.is-held,
+.sushi-toy.is-playing {
+  cursor: grabbing;
+}
+
+.sushi-line.is-live .sl-piece.is-held {
+  filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.25));
+}
+
+.sl-belt {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+}
+
+.sl-tread {
+  fill: none;
+  stroke: var(--bg);
+  stroke-width: 1;
+  stroke-dasharray: 1.2 4.8;
+  animation: sl-tread 8s linear infinite;
+}
+
+.sl-roller {
+  fill: var(--bg);
+  stroke: currentColor;
+  stroke-width: 1.1;
+}
+
+.sl-spokes {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sl-spin 2.1s linear infinite;
+}
+
+.sl-legs {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+
+.sl-piece {
+  opacity: 0;
+  animation: sl-ride 8s linear infinite;
+}
+
+.sl-piece:nth-of-type(2) { animation-delay: -2s; }
+.sl-piece:nth-of-type(3) { animation-delay: -4s; }
+.sl-piece:nth-of-type(4) { animation-delay: -6s; }
+
+.sushi-line:hover .sl-piece,
+.sushi-line:hover .sl-tread,
+.sushi-line:hover .sl-spokes {
+  animation-play-state: paused;
+}
+
+@keyframes sl-tread {
+  to { stroke-dashoffset: -144; }
+}
+
+@keyframes sl-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes sl-ride {
+  0% {
+    transform: translate(28px, 19px) rotate(0deg);
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1);
+  }
+  5% {
+    transform: translate(28px, 29.4px) rotate(0deg);
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+  7% {
+    transform: translate(28px, 28.8px) rotate(0deg);
+    opacity: 1;
+    animation-timing-function: linear;
+  }
+  79.6% {
+    transform: translate(134px, 28.8px) rotate(0deg);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6);
+  }
+  88% {
+    transform: translate(145px, 33px) rotate(80deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(145px, 33px) rotate(80deg);
+    opacity: 0;
+  }
+}
+
+/* no motion: just four pieces sitting on the belt */
+@media (prefers-reduced-motion: reduce) {
+  .sl-piece { opacity: 1; }
+  .sl-piece:nth-of-type(1) { transform: translate(38px, 28.8px); }
+  .sl-piece:nth-of-type(2) { transform: translate(66px, 28.8px); }
+  .sl-piece:nth-of-type(3) { transform: translate(94px, 28.8px); }
+  .sl-piece:nth-of-type(4) { transform: translate(122px, 28.8px); }
+}
+
+/* letters of the name eat sushi dropped on them (sushi.js) */
+.site-name .ch {
+  display: inline-block;
+  transition: transform 0.3s var(--ease-out), color 0.3s ease;
+}
+
+.site-name .ch.is-hungry {
+  transform: translateY(-5px) scale(1.15);
+  color: var(--accent);
+}
+
+.site-name .ch.is-fed {
+  color: var(--accent);
+}
+
+.site-name .ch.is-chomping {
+  animation: chomp 0.55s var(--ease-out);
+}
+
+@keyframes chomp {
+  0% { transform: scale(1.15); }
+  30% { transform: scale(1.3, 0.7); }
+  60% { transform: scale(0.9, 1.15); }
+  100% { transform: none; }
+}
+
+/* ---------- Buttons and small link rows ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border: 1px solid var(--text);
+  border-radius: 999px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.btn:hover,
+.btn:focus-visible {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.cta-links {
+  align-items: center;
+}
+
+.jump-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* ---------- Expandable entries (Outside physics) ---------- */
+.entries.accordion {
+  gap: 0;
+}
+
+.accordion > li {
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.accordion > li:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.accordion > li:last-child {
+  padding-bottom: 0;
+}
+
+.expand-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: default;
+}
+
+.expand-head .chev {
+  display: none;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  color: var(--muted);
+  transition: transform 0.5s var(--ease-out), color 0.2s ease;
+}
+
+.js .expand-head {
+  cursor: pointer;
+}
+
+.js .expand-head .chev {
+  display: block;
+}
+
+.js .expand-head .entry-title {
+  transition: color 0.2s ease;
+}
+
+.js .expand-head:hover .entry-title {
+  color: var(--accent);
+}
+
+.js .expand-head:hover .chev {
+  color: var(--text);
+}
+
+.expand-head[aria-expanded="true"] .chev {
+  transform: rotate(180deg);
+}
+
+.accordion .expand-inner > p {
+  margin: 0;
+  padding-top: 8px;
+}
+
+/* Without JavaScript the text simply shows. */
+.js .expand-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s var(--ease-out);
+}
+
+.js .expand-body.is-open {
+  grid-template-rows: 1fr;
+}
+
+.expand-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.js .expand-inner > p {
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.3s ease, transform 0.45s var(--ease-out);
+}
+
+.js .expand-body.is-open .expand-inner > p {
+  opacity: 1;
+  transform: none;
+  transition-delay: 80ms;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 24px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+/* ---------- Motion ---------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* the header settles in on load */
+.intro > * {
+  animation: rise 0.9s var(--ease-out) both;
+}
+
+.intro > :nth-child(2) { animation-delay: 70ms; }
+.intro > :nth-child(3) { animation-delay: 140ms; }
+.intro > :nth-child(4) { animation-delay: 210ms; }
+.intro > :nth-child(5) { animation-delay: 280ms; }
+
+/* sections fade up as they scroll into view (site.js adds .is-in) */
+.js main > section,
+.js main > article,
+.js .footer {
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+  transition-delay: var(--delay, 0ms);
+}
+
+.js main > section:not(.is-in),
+.js main > article:not(.is-in),
+.js .footer:not(.is-in) {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.js .instant {
+  transition: none;
+}
+
+/* arriving from another page of the site: let the page transition do the work */
+.no-intro .intro > * {
+  animation: none;
+}
+
+/* smooth cross-fade between pages; the name glides between its big and small spots */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+  animation-timing-function: var(--ease-in-out);
+}
+
+::view-transition-group(site-name),
+::view-transition-group(blog-title) {
+  animation-duration: 0.6s;
+  animation-timing-function: var(--ease-out);
+}
+
+/* the Blog pill (or button) on the home page grows into the blog's big heading */
+.vt-blog {
+  view-transition-name: blog-title;
+}
+
+/* morphing headings hug their text, so they scale from and to the words, not the full page width */
+h1.vt-blog,
+h1.site-name {
+  width: fit-content;
+}
+
+/* into the blog the page slides forward, out of it back; switching language just cross-fades
+   (the direction is worked out in each page's head script) */
+html:active-view-transition-type(forward)::view-transition-old(root) {
+  animation: vt-out-left 0.42s var(--ease-in-out) both;
+}
+
+html:active-view-transition-type(forward)::view-transition-new(root) {
+  animation: vt-in-right 0.65s var(--ease-out) both;
+}
+
+html:active-view-transition-type(back)::view-transition-old(root) {
+  animation: vt-out-right 0.42s var(--ease-in-out) both;
+}
+
+html:active-view-transition-type(back)::view-transition-new(root) {
+  animation: vt-in-left 0.65s var(--ease-out) both;
+}
+
+@keyframes vt-out-left {
+  to { opacity: 0; transform: translateX(-56px); filter: blur(4px); }
+}
+
+@keyframes vt-in-right {
+  from { opacity: 0; transform: translateX(56px); filter: blur(4px); }
+}
+
+@keyframes vt-out-right {
+  to { opacity: 0; transform: translateX(56px); filter: blur(4px); }
+}
+
+@keyframes vt-in-left {
+  from { opacity: 0; transform: translateX(-56px); filter: blur(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .js main > section:not(.is-in),
+  .js main > article:not(.is-in),
+  .js .footer:not(.is-in),
+  .js .more li {
+    opacity: 1;
+    transform: none;
+  }
+
+  @view-transition {
+    navigation: none;
+  }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 640px) {
+  .page {
+    padding: 72px 16px 48px;
+  }
+
+  .intro {
+    padding-bottom: 48px;
+  }
+
+  .top-nav {
+    top: 20px;
+    right: 16px;
+    gap: 18px;
+  }
+
+  .home-link {
+    top: 16px;
+    left: 16px;
+  }
+
+  .sushi-toy {
+    margin: 8px 0 -14px auto;
+  }
+
+  .sushi-line {
+    width: 130px;
+  }
+
+  section {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 32px 0;
+  }
+
+  .post {
+    padding-top: 32px;
+  }
+}

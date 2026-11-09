@@ -1,0 +1,13 @@
+[
+  {
+    "id": "belgrade-restaurants",
+    "title": { "en": "Best restaurants in Belgrade", "sr": "Najbolji restorani u Beogradu" },
+    "tiers": {
+      "S": [],
+      "A": [],
+      "B": [],
+      "C": [],
+      "D": []
+    }
+  }
+]
