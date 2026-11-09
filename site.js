@@ -129,24 +129,146 @@
     });
   });
 
-  // switch to another tab and this one asks you to come back
-  var savedTitle = null;
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) {
-      savedTitle = document.title;
-      document.title = sr ? 'Vrati se, suši se hladi 🍣' : 'Come back, the sushi is getting cold 🍣';
-    } else if (savedTitle !== null) {
-      document.title = savedTitle;
-      savedTitle = null;
+  // the handouts' toys share the medal's way of showing a short equation
+  var flashNote = function (note, ms) {
+    if (!note) return;
+    note.classList.add('is-on');
+    clearTimeout(note._t);
+    note._t = setTimeout(function () { note.classList.remove('is-on'); }, ms);
+  };
+  var fx = function (n) { return n.toFixed(2); };
+
+  // Wave optics: N phasors chained head to tail. A click curls them into a closed loop
+  // (resultant zero: a dark fringe) and unrolls them again (full brightness).
+  var phasor = document.querySelector('.toy-phasor');
+  if (phasor) {
+    var chain = phasor.querySelector('.ph-chain');
+    var res = phasor.querySelector('.ph-res');
+    var pNote = phasor.parentNode.querySelector('.medal-note');
+    chain.parentNode.insertBefore(res, chain); // the resultant sits underneath the chain
+    var NPH = 6;
+    var LEN = 3.6;
+    var segs = [];
+    for (var i = 0; i < NPH; i++) {
+      var seg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      chain.appendChild(seg);
+      segs.push(seg);
     }
-  });
+    var drawPhasors = function (phi) {
+      var x = 0;
+      var y = 0;
+      for (var k = 0; k < NPH; k++) {
+        var a = -k * phi; // each phasor turned by phi more than the last (curling upwards)
+        var nx = x + LEN * Math.cos(a);
+        var ny = y + LEN * Math.sin(a);
+        var h1x = nx - 1.1 * Math.cos(a - 0.5);
+        var h1y = ny - 1.1 * Math.sin(a - 0.5);
+        var h2x = nx - 1.1 * Math.cos(a + 0.5);
+        var h2y = ny - 1.1 * Math.sin(a + 0.5);
+        segs[k].setAttribute('d', 'M' + fx(x) + ' ' + fx(y) + 'L' + fx(nx) + ' ' + fx(ny) +
+          'M' + fx(h1x) + ' ' + fx(h1y) + 'L' + fx(nx) + ' ' + fx(ny) + 'L' + fx(h2x) + ' ' + fx(h2y));
+        x = nx;
+        y = ny;
+      }
+      res.setAttribute('d', 'M0 0L' + fx(x) + ' ' + fx(y));
+    };
+    drawPhasors(0);
+    res.style.opacity = '0';
+    var curling = false;
+    phasor.addEventListener('click', function () {
+      flashNote(pNote, 3000);
+      if (reduce || curling) return;
+      curling = true;
+      res.style.opacity = '0.85';
+      var T = 2600;
+      var t0 = performance.now();
+      var curl = function (now) {
+        var u = Math.min(1, (now - t0) / T);
+        var s = Math.sin(Math.PI * u);
+        drawPhasors((2 * Math.PI / NPH) * s * s); // 0 -> closed loop -> 0
+        if (u < 1) requestAnimationFrame(curl);
+        else { curling = false; res.style.opacity = '0'; }
+      };
+      requestAnimationFrame(curl);
+    });
+  }
+
+  // Electrostatics: two pith balls on threads from one point. Each click adds charge,
+  // they repel to a new equilibrium (tan(theta) = F / mg), and the charge slowly leaks away.
+  var pith = document.querySelector('.toy-pith');
+  if (pith) {
+    var thread = pith.querySelector('.pb-thread');
+    var balls = pith.querySelectorAll('.pb-ball');
+    var plus = pith.querySelector('.pb-plus');
+    var cNote = pith.parentNode.querySelector('.medal-note');
+    var THREAD = 15;
+    var RAD = 2.4;
+    var TOUCH = Math.asin(RAD / THREAD); // uncharged, the balls just touch
+    var PG = 49;      // g / l
+    var PK = 16.3;    // repulsion strength: one click settles near 25 degrees
+    var PDAMP = 2.4;
+    var LEAK = 3.5;   // seconds for the charge to fade
+    var tq = TOUCH;
+    var wq = 0;
+    var Q = 0;
+    var repelling = false;
+    var lastQ = 0;
+    var drawPith = function () {
+      var sx = THREAD * Math.sin(tq);
+      var sy = THREAD * Math.cos(tq);
+      thread.setAttribute('d', 'M0 0L' + fx(-sx) + ' ' + fx(sy) + 'M0 0L' + fx(sx) + ' ' + fx(sy));
+      balls[0].setAttribute('cx', fx(-sx));
+      balls[0].setAttribute('cy', fx(sy));
+      balls[1].setAttribute('cx', fx(sx));
+      balls[1].setAttribute('cy', fx(sy));
+      var p = 1.1;
+      plus.setAttribute('d',
+        'M' + fx(-sx - p) + ' ' + fx(sy) + 'h' + 2 * p + 'M' + fx(-sx) + ' ' + fx(sy - p) + 'v' + 2 * p +
+        'M' + fx(sx - p) + ' ' + fx(sy) + 'h' + 2 * p + 'M' + fx(sx) + ' ' + fx(sy - p) + 'v' + 2 * p);
+      plus.style.opacity = Math.min(1, Q).toFixed(2);
+    };
+    var repel = function (now) {
+      var dt = Math.min(0.033, (now - lastQ) / 1000);
+      lastQ = now;
+      Q *= Math.exp(-dt / LEAK);
+      for (var j = 0; j < 4; j++) {
+        var h = dt / 4;
+        var sn = Math.sin(tq);
+        var d = Math.max(2 * sn, 0.15);
+        var acc = -PG * sn + (PK * Q * Q * Math.cos(tq)) / (d * d) - PDAMP * wq;
+        wq += acc * h;
+        tq += wq * h;
+        if (tq < TOUCH) { tq = TOUCH; if (wq < 0) wq = -wq * 0.3; } // they bump together
+        if (tq > 1.3) { tq = 1.3; wq = 0; }
+      }
+      drawPith();
+      if (Q < 0.05 && Math.abs(wq) < 0.02 && tq - TOUCH < 0.004) {
+        Q = 0; tq = TOUCH; wq = 0;
+        drawPith();
+        repelling = false;
+        return;
+      }
+      requestAnimationFrame(repel);
+    };
+    drawPith();
+    pith.addEventListener('click', function () {
+      flashNote(cNote, 3000);
+      if (reduce) return;
+      Q = Math.min(3, Q + 1);
+      if (!repelling) {
+        repelling = true;
+        lastQ = performance.now();
+        requestAnimationFrame(repel);
+      }
+    });
+  }
 
   // a hello for anyone who opens the developer console
   try {
     console.log(
       '%c' + (sr ? 'Zdravo, radoznali.' : 'Hi there, curious one.'),
       'font: 500 15px Georgia, serif; color: #2648b8;',
-      '\n' + (sr ? 'Probaj da nahraniš moje ime sušijem i gurni medalju.' : 'Try feeding my name some sushi, and give the medal a nudge.')
+      '\n' + (sr ? 'Probaj da nahraniš moje ime sušijem, gurneš medalju i klikneš fazore i kuglice.' : 'Try feeding my name some sushi, nudging the medal, and clicking the phasors and pith balls.')
     );
   } catch (err) {}
 
