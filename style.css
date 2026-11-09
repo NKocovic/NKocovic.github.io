@@ -1699,13 +1699,27 @@ html:active-view-transition-type(back)::view-transition-new(root) {
     width: 130px;
   }
 
+  /* on phones a toy's equation opens as its own line under the title and pushes
+     the text below down, instead of floating over it */
+  .title-with-medal {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+
   .medal-note,
   .medal-note.is-on {
-    left: auto;
-    right: 0;
-    top: 100%;
-    margin: 8px 0 0;
+    position: static;
+    flex-basis: 100%;
+    margin: 0;
+    max-height: 0;
+    overflow: hidden;
     transform: none;
+    transition: opacity 0.3s ease, max-height 0.45s var(--ease-in-out), margin 0.45s var(--ease-in-out);
+  }
+
+  .medal-note.is-on {
+    max-height: 3.4em;
+    margin: 6px 0 2px;
   }
 
   section {
