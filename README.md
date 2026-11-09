@@ -12,6 +12,7 @@ Nikola Kočović's personal website. Plain HTML and CSS, with no build step.
 | `blog/` | The blog (the Serbian blog pages live in `sr/blog/`) |
 | `blog/tierlists.json` | The tier lists shown in the Tier lists section of the blog |
 | `handouts/` | Handout PDFs |
+| `projects/` | Project PDFs (e.g. the SYPT Ring Fountain presentation) |
 | `cv.pdf`, `cv-sr.pdf` | CV, English and Serbian |
 
 ## Writing a blog post
