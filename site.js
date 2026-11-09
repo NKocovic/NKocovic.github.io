@@ -43,6 +43,114 @@
     targets.forEach(function (el) { io.observe(el); });
   });
 
+  // ---- small easter eggs ----
+  var sr = root.lang.indexOf('sr') === 0;
+
+  // the IPhO medal swings like a real pendulum: theta'' = -(g/l) sin(theta) - damping.
+  // Click in rhythm and it gains enough energy to loop over the top.
+  var medal = document.querySelector('.medal');
+  if (medal) {
+    var medalNote = medal.parentNode.querySelector('.medal-note');
+    var noteText = medalNote ? medalNote.textContent : '';
+    var th = 0;
+    var om = 0;
+    var swinging = false;
+    var looped = false;
+    var lastT = 0;
+    var noteTimer = null;
+    var G_L = 49;   // (g / l): a swing period of about 0.9 s
+    var DAMP = 1.7;
+
+    var showNote = function (text, ms) {
+      if (!medalNote) return;
+      medalNote.textContent = text;
+      medalNote.classList.add('is-on');
+      clearTimeout(noteTimer);
+      noteTimer = setTimeout(function () { medalNote.classList.remove('is-on'); }, ms);
+    };
+
+    var swing = function (now) {
+      var dt = Math.min(0.033, (now - lastT) / 1000);
+      lastT = now;
+      for (var i = 0; i < 4; i++) {
+        var h = dt / 4;
+        om += (-G_L * Math.sin(th) - DAMP * om) * h;
+        th += om * h;
+      }
+      if (!looped && Math.abs(th) > Math.PI) {
+        looped = true;
+        showNote('E > 2mgℓ', 2200); // enough energy to go over the top
+      }
+      var energy = om * om / 2 + G_L * (1 - Math.cos(th));
+      if (energy < 0.01) { // under about a degree: let it rest
+        th = 0;
+        om = 0;
+        looped = false;
+        swinging = false;
+        medal.style.transform = '';
+        return;
+      }
+      medal.style.transform = 'rotate(' + (th * 180 / Math.PI).toFixed(2) + 'deg)';
+      requestAnimationFrame(swing);
+    };
+
+    medal.addEventListener('click', function () {
+      showNote(noteText, 2600);
+      if (reduce) return;
+      om += 7.5 * (om < 0 ? -1 : 1); // push the way it's already going, like pumping a swing
+      if (!swinging) {
+        swinging = true;
+        lastT = performance.now();
+        requestAnimationFrame(swing);
+      }
+    });
+  }
+
+  // "(lol)": a few music notes float up
+  document.querySelectorAll('.lol').forEach(function (lol) {
+    lol.addEventListener('click', function () {
+      if (reduce || !lol.animate) return;
+      var r = lol.getBoundingClientRect();
+      ['♪', '♫', '♪'].forEach(function (sym, i) {
+        var n = document.createElement('span');
+        n.className = 'note-fly';
+        n.setAttribute('aria-hidden', 'true');
+        n.textContent = sym;
+        n.style.left = r.left + r.width * (0.3 + 0.2 * i) + 'px';
+        n.style.top = r.top - 4 + 'px';
+        document.body.appendChild(n);
+        var drift = (i - 1) * 14 + (Math.random() - 0.5) * 8;
+        n.animate([
+          { transform: 'translate(0, 0) rotate(0deg)', opacity: 0 },
+          { transform: 'translate(' + drift * 0.3 + 'px, -14px) rotate(' + drift * 0.4 + 'deg)', opacity: 1, offset: 0.2 },
+          { transform: 'translate(' + drift + 'px, -46px) rotate(' + drift + 'deg)', opacity: 0 }
+        ], { duration: 1300, delay: i * 110, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'both' })
+          .onfinish = function () { n.remove(); };
+      });
+    });
+  });
+
+  // switch to another tab and this one asks you to come back
+  var savedTitle = null;
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      savedTitle = document.title;
+      document.title = sr ? 'Vrati se, suši se hladi 🍣' : 'Come back, the sushi is getting cold 🍣';
+    } else if (savedTitle !== null) {
+      document.title = savedTitle;
+      savedTitle = null;
+    }
+  });
+
+  // a hello for anyone who opens the developer console
+  try {
+    console.log(
+      '%c' + (sr ? 'Zdravo, radoznali.' : 'Hi there, curious one.'),
+      'font: 500 15px Georgia, serif; color: #2648b8;',
+      '\n' + (sr ? 'Probaj da nahraniš moje ime sušijem i gurni medalju.' : 'Try feeding my name some sushi, and give the medal a nudge.')
+    );
+  } catch (err) {}
+
   // ---- page transition: whichever "Blog" link you click grows into the blog's heading ----
   // (links that jump into the page, like the sushi's #tierlists, skip the morph)
   document.addEventListener('click', function (e) {
