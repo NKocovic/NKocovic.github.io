@@ -43,6 +43,33 @@
     targets.forEach(function (el) { io.observe(el); });
   });
 
+  // ---- talks: hovering a slide thumbnail flips through a few highlight slides ----
+  document.querySelectorAll('.talk-thumb').forEach(function (thumb) {
+    var imgs = thumb.querySelectorAll('img');
+    if (imgs.length < 2) return;
+    var at = 0;
+    var timer = null;
+    var show = function (i) {
+      imgs[at].classList.remove('is-on');
+      at = i;
+      imgs[at].classList.add('is-on');
+    };
+    var start = function () {
+      if (timer || reduce) return;
+      show(1 % imgs.length);
+      timer = setInterval(function () { show((at + 1) % imgs.length); }, 1300);
+    };
+    var stop = function () {
+      clearInterval(timer);
+      timer = null;
+      show(0);
+    };
+    thumb.addEventListener('pointerenter', start);
+    thumb.addEventListener('pointerleave', stop);
+    thumb.addEventListener('focus', start);
+    thumb.addEventListener('blur', stop);
+  });
+
   // ---- small easter eggs ----
   var sr = root.lang.indexOf('sr') === 0;
 
