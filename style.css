@@ -560,19 +560,32 @@ a.tier-item:focus-visible {
   transform: translateY(-2px);
 }
 
-/* a place's note: a small bubble above it on hover, focus or tap */
-.tier-item[data-note] {
+/* a place's bubble: my take, then what to order ("Try"), shown on hover, focus or tap */
+.tier-item.has-tip {
   position: relative;
   cursor: help;
   outline: none;
 }
 
-a.tier-item[data-note] {
+a.tier-item.has-tip {
   cursor: pointer;
 }
 
-.tier-item[data-note]::after {
-  content: attr(data-note);
+/* a small dot marks places with a dish recommendation */
+.tier-item.has-try::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin: 0 7px 2px -2px;
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: middle;
+}
+
+.tier-item .tip {
+  display: grid;
+  gap: 6px;
   position: absolute;
   left: 0;
   bottom: calc(100% + 10px);
@@ -594,20 +607,35 @@ a.tier-item[data-note] {
   transition: opacity 0.2s ease, transform 0.3s var(--ease-out);
 }
 
-.tier-item.tip-right[data-note]::after {
+.tier-item.tip-right .tip {
   left: auto;
   right: 0;
   transform-origin: bottom right;
 }
 
-.tier-item[data-note]:hover,
-.tier-item[data-note]:focus-visible,
-.tier-item[data-note]:focus {
+/* the "Try" line: what to order, set apart from the note */
+.tip-note + .tip-try {
+  padding-top: 6px;
+  border-top: 1px solid color-mix(in srgb, var(--bg) 25%, transparent);
+}
+
+.tip-try b {
+  margin-right: 4px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--accent) 55%, var(--bg));
+}
+
+.tier-item.has-tip:hover,
+.tier-item.has-tip:focus-visible,
+.tier-item.has-tip:focus {
   border-color: currentColor;
 }
 
-.tier-item[data-note]:hover::after,
-.tier-item[data-note]:focus::after {
+.tier-item.has-tip:hover .tip,
+.tier-item.has-tip:focus .tip {
   opacity: 1;
   transform: none;
 }

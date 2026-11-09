@@ -8,8 +8,8 @@
     ? { empty: 'Još nema objava. Uskoro.', missing: 'Ova objava ne postoji.', failed: 'Objava trenutno ne može da se učita.' }
     : { empty: 'No posts yet. Check back soon.', missing: 'This post doesn’t exist.', failed: 'This couldn’t be loaded right now.' };
   var tierText = sr
-    ? { soon: 'Uskoro.', none: 'Još nema lista.', updated: 'ažurirano' }
-    : { soon: 'Coming soon.', none: 'No lists yet.', updated: 'updated' };
+    ? { soon: 'Uskoro.', none: 'Još nema lista.', updated: 'ažurirano', tryLabel: 'Probaj' }
+    : { soon: 'Coming soon.', none: 'No lists yet.', updated: 'updated', tryLabel: 'Try' };
   var dateFmt = new Intl.DateTimeFormat(sr ? 'sr-Latn' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
   function formatDate(iso) {
@@ -162,9 +162,19 @@
               var li = make('li');
               var chip = make(item.link ? 'a' : 'span', 'tier-item', tr(item.name));
               if (item.link) chip.href = item.link;
-              if (item.note) {
-                // shown as a bubble on hover, keyboard focus or tap (see .tier-item[data-note] in style.css)
-                chip.dataset.note = tr(item.note);
+              if (item.note || item.try) {
+                // a bubble with my take and what to order, shown on hover, keyboard focus or tap
+                chip.classList.add('has-tip');
+                if (item.try) chip.classList.add('has-try');
+                var tip = make('span', 'tip');
+                if (item.note) tip.appendChild(make('span', 'tip-note', tr(item.note)));
+                if (item.try) {
+                  var t = make('span', 'tip-try');
+                  t.appendChild(make('b', null, tierText.tryLabel));
+                  t.appendChild(document.createTextNode(' ' + tr(item.try)));
+                  tip.appendChild(t);
+                }
+                chip.appendChild(tip);
                 if (!item.link) chip.tabIndex = 0;
                 var side = function () {
                   var r = chip.getBoundingClientRect();

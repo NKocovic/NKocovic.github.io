@@ -3,28 +3,35 @@
     "id": "belgrade-restaurants",
     "title": { "en": "Best restaurants in Belgrade", "sr": "Najbolji restorani u Beogradu" },
     "updated": "2026-11-09",
-    "note": { "en": "Hover over or tap a place for my take.", "sr": "Pređi mišem preko mesta ili ga dodirni za moj komentar." },
+    "note": { "en": "Hover over or tap a place for my take and what to order.", "sr": "Pređi mišem preko mesta ili ga dodirni za moj komentar i šta da naručiš." },
     "tiers": {
       "S": [
         { "name": "Skylounge", "note": { "en": "Best sushi in the city, by far.", "sr": "Daleko najbolji suši u gradu." } },
         { "name": "Comunale", "note": { "en": "Great pasta and a great quality/price ratio.", "sr": "Odlična pasta i odličan odnos cene i kvaliteta." } },
         { "name": "Rustique", "note": { "en": "Best pizza in the city. The thinnest you'll find.", "sr": "Najbolja pica u gradu. Tanju nećeš naći." } },
-        { "name": "Giovanni's", "note": { "en": "Also great, thin pizza. Get the one with pistachio.", "sr": "Takođe odlična, tanka pica. Preporuka: ona sa pistaćima." } },
+        { "name": "Giovanni's (Pizza)", "note": { "en": "Also great, thin pizza.", "sr": "Takođe odlična, tanka pica." }, "try": { "en": "The one with pistachio.", "sr": "Onu sa pistaćima." } },
         { "name": "Koordinata Street", "note": { "en": "A true gastronomic experience. Recommended.", "sr": "Pravo gastronomsko iskustvo. Preporuka." } }
       ],
       "A": [
         { "name": "Cirino drvce", "note": { "en": "Great pljeskavica. Was S, but fell off.", "sr": "Odlična pljeskavica. Bio je S, ali je pao." } },
-        { "name": "Rubin", "note": { "en": "Fair food at a fair price. Great for dinners where the food isn't the topic: the view is the selling point.", "sr": "Pošteno jelo po poštenoj ceni. Odličan za večere na kojima hrana nije tema: pogled je glavni adut." } },
-        { "name": "Sushi XO", "note": { "en": "Good sushi at a fair enough price.", "sr": "Dobar suši po sasvim pristojnoj ceni." } },
         { "name": "Iva New Balkan", "note": { "en": "Good, but the prices are a bit exaggerated.", "sr": "Dobro, ali su cene malo preterane." } },
-        { "name": "Klub književnika", "note": { "en": "Great food at a steep price. Try the tender beef.", "sr": "Odlična hrana po visokoj ceni. Probaj junetinu (tender beef)." } },
-        { "name": "Enso", "note": { "en": "Try the rabbit. The beef Wellington is also pristine.", "sr": "Probaj zeca. I beef Wellington je besprekoran." } }
+        { "name": "Klub književnika", "note": { "en": "Great food at a steep price.", "sr": "Odlična hrana po visokoj ceni." }, "try": { "en": "The tender beef.", "sr": "Junetinu (tender beef)." } },
+        { "name": "Enso", "try": { "en": "The rabbit. The beef Wellington is also pristine.", "sr": "Zeca. I beef Wellington je besprekoran." } },
+        { "name": "Matignon", "note": { "en": "The prices are steep.", "sr": "Cene su visoke." }, "try": { "en": "The gnocchi with cheese. A must.", "sr": "Njoke sa sirom. Obavezno." } }
       ],
       "B": [
-        { "name": "Babaroga", "note": { "en": "Nothing special. Fair steak.", "sr": "Ništa posebno. Pristojan stek." } }
+        { "name": "Babaroga", "note": { "en": "Nothing special. Fair steak.", "sr": "Ništa posebno. Pristojan stek." } },
+        { "name": "Rubin", "note": { "en": "Fair food at a fair price. Great for dinners where the food isn't the topic: the view is the selling point.", "sr": "Pošteno jelo po poštenoj ceni. Odličan za večere na kojima hrana nije tema: pogled je glavni adut." } },
+        { "name": "Sushi XO", "note": { "en": "Good sushi at a fair enough price.", "sr": "Dobar suši po sasvim pristojnoj ceni." } },
+        { "name": "SushiCo Zen (Galerija)", "note": { "en": "Good enough, with some interesting flavours.", "sr": "Sasvim solidno, ima neke zanimljive ukuse." } },
+        { "name": "Giovanni's (Pasta)", "note": { "en": "Quality dishes at normal prices.", "sr": "Kvalitetna jela po normalnim cenama." }, "try": { "en": "The tartufi.", "sr": "Tartufi." } }
       ],
       "C": [
-        { "name": "Mezestoran Dvorištance", "note": { "en": "Overpriced. Would avoid.", "sr": "Preskupo. Izbegavao bih." } }
+        { "name": "Careva ćuprija", "note": { "en": "The atmosphere tries to be authentic, but doesn't succeed.", "sr": "Atmosfera pokušava da bude autentična, ali ne uspeva." }, "try": { "en": "The beef tartare, but split it four ways: it's too big.", "sr": "Goveđi tartar, ali ga podelite na četvoro: prevelik je." } }
+      ],
+      "D": [
+        { "name": "Mezestoran Dvorištance", "note": { "en": "Overpriced. Would avoid.", "sr": "Preskupo. Izbegavao bih." } },
+        { "name": "Franš", "note": { "en": "Fancy and overpriced. Kitsch.", "sr": "Otmeno i preskupo. Kič." } }
       ]
     }
   }
