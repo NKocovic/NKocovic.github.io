@@ -1179,6 +1179,30 @@ a.tier-item.has-tip {
   fill: var(--accent);
 }
 
+/* going back: everything but N and kappa fades out quietly */
+.site-name.is-clearing .eq-bit {
+  animation: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.intro > .egg-note.is-clearing {
+  animation: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* the real letters wait, invisible, while their copies flow into place */
+.site-name.is-restoring .ch {
+  opacity: 0;
+}
+
+.egg-ch.is-initial.is-cooling {
+  color: var(--text) !important;
+  transition: color 0.45s ease;
+}
+
 .intro > .egg-note {
   margin: 0 0 18px;
   font-size: 0.875rem;
