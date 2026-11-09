@@ -915,7 +915,7 @@ a.tier-item.has-tip {
 }
 
 @keyframes write-in {
-  from { opacity: 0; transform: translateY(10px); filter: blur(6px); }
+  from { opacity: 0; transform: translateY(6px); }
 }
 
 .eq-var {
@@ -1026,9 +1026,8 @@ a.tier-item.has-tip {
 }
 
 .egg-ch.is-gone {
-  transition: opacity 0.5s ease, filter 0.5s ease;
+  transition: opacity 0.45s ease;
   opacity: 0 !important;
-  filter: blur(8px);
 }
 
 .site-name.is-pending .eq-bit,
@@ -1064,7 +1063,7 @@ a.tier-item.has-tip {
 }
 
 @keyframes init-in {
-  from { opacity: 0; transform: scale(0.8); filter: blur(8px); }
+  from { opacity: 0; }
 }
 
 .eq-sub {
@@ -1125,7 +1124,7 @@ a.tier-item.has-tip {
 }
 
 .eq-pow {
-  margin-left: 0.16em;
+  margin-left: 0.04em;
   font-size: 0.62em;
   font-style: normal;
   vertical-align: 0.6em;

@@ -150,8 +150,7 @@
     var bez = function (a, b, c, t) { var u = 1 - t; return u * u * a + 2 * u * t * b + t * t * c; };
     others.forEach(function (it) {
       it.start = it.start * (STAGGER / 75);
-      it.lift = 18 + Math.random() * 16;   // each arc a little different
-      it.tilt = (Math.random() - 0.5) * 30;
+      it.lift = 10 + Math.abs(it.home.cx - it.cx) * 0.12; // farther letters arc a little higher
     });
 
     function frame(now) {
@@ -164,7 +163,7 @@
       [initN, initK].forEach(function (it) {
         var swell = it.gulps.reduce(function (a, g) {
           var dt = now - g;
-          return a + 0.16 * Math.exp(-dt / 260) * Math.sin(dt / 60);
+          return a + 0.08 * Math.exp(-dt / 220) * Math.sin(dt / 70);
         }, 0);
         var full = it.size ? it.gulps.length / it.size : 1;
         var lift = 46;
@@ -172,23 +171,20 @@
         it.y = bez(0, it.dy * 0.2 - lift, it.dy, fe);
         var sc = (1 + swell) * (1 + (it.s - 1) * fe);
         it.el.style.transform = 'translate(' + it.x.toFixed(2) + 'px,' + it.y.toFixed(2) + 'px) scale(' + sc.toFixed(4) + ')';
-        it.el.style.textShadow = '0 0 ' + (0.08 + 0.42 * Math.min(1, full)).toFixed(3) + 'em ' + accent;
+        it.el.style.textShadow = '0 0 ' + (0.05 + 0.2 * Math.min(1, full)).toFixed(3) + 'em ' + accent;
       });
 
       // every other letter flows along a curve into its initial's current position
       others.forEach(function (it) {
         var q = Math.max(0, Math.min(1, (t - it.start) / GULP));
-        var e = easeInOutSine(q) * easeInOutSine(q) * (3 - 2 * easeInOutSine(q)); // gentle start, firm finish
+        var e = easeInOut(q);
         var hx = it.home.cx + (it.home.x || 0) - it.cx;
         var hy = it.home.cy + (it.home.y || 0) - it.cy;
         var x = bez(0, hx * 0.5, hx, e);
         var y = bez(0, hy * 0.5 - it.lift, hy, e);
-        var sc = 1 - 0.85 * e;
-        var rot = it.tilt * Math.sin(Math.PI * e);
-        var blur = Math.sin(Math.PI * q) * 1.1;
-        it.el.style.transform = 'translate(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px) rotate(' + rot.toFixed(1) + 'deg) scale(' + sc.toFixed(4) + ')';
-        it.el.style.opacity = String(q < 0.7 ? 1 : Math.max(0, 1 - (q - 0.7) / 0.3));
-        it.el.style.filter = blur > 0.05 ? 'blur(' + blur.toFixed(2) + 'px)' : '';
+        var sc = 1 - 0.8 * e;
+        it.el.style.transform = 'translate(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px) scale(' + sc.toFixed(4) + ')';
+        it.el.style.opacity = String(1 - easeInOutSine(Math.max(0, (q - 0.5) / 0.5)));
         if (q >= 1 && !it.done) {
           it.done = true;
           it.home.gulps.push(now);
@@ -214,7 +210,6 @@
   //    and the two little graphs come alive
   function reveal(layer, initN, initK) {
     if (initK) initK.el.classList.add('is-gone'); // K dissolves into kappa (N lands separately)
-    nameEl.appendChild(el('span', 'eq-flash'));
     nameEl.classList.remove('is-pending');
     setTimeout(function () { layer.remove(); }, 600);
     fillGraphs();
@@ -227,7 +222,7 @@
   function buildEquation() {
     nameEl.textContent = '';
     nameEl.classList.add('is-equation', 'is-pending');
-    nameEl.setAttribute('aria-label', 'N equals N zero times e to the minus E over k B T, the Boltzmann law. Kappa equals the absolute value of y double prime, over one plus y prime squared, to the power three halves: the curvature.');
+    nameEl.setAttribute('aria-label', 'N equals N zero times e to the minus E over k B T, the Boltzmann law. Kappa equals the absolute value of y double prime, over one plus y prime, squared,, to the power three halves: the curvature.');
     nameEl.title = sr ? 'Klikni da vratiš ime' : 'Click to get my name back';
     var grid = el('span', 'eq-grid');
     grid.setAttribute('aria-hidden', 'true');
@@ -259,7 +254,7 @@
     var fr = bit('eq-frac eq-frac-k', null);
     fr.appendChild(el('span', 'eq-num', '|y″|'));
     var den = el('span', 'eq-den');
-    den.appendChild(document.createTextNode('(1 + y′'));
+    den.appendChild(document.createTextNode('(1 + (y′)'));
     den.appendChild(el('sup', 'eq-pow', '2'));
     den.appendChild(document.createTextNode(')'));
     den.appendChild(el('sup', 'eq-pow', '3/2'));
