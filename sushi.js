@@ -42,22 +42,101 @@
 
   // ---- the name can be fed: drop a piece on a letter and it eats it ----
   var nameEl = document.querySelector('.site-name');
+  var nameText = nameEl ? nameEl.textContent : '';
+  var sr = document.documentElement.lang.indexOf('sr') === 0;
   var letters = [];
-  if (nameEl) {
-    var text = nameEl.textContent;
-    nameEl.setAttribute('aria-label', text);
+  var transformed = false;
+
+  function buildName() {
+    letters = [];
+    nameEl.setAttribute('aria-label', nameText);
     nameEl.textContent = '';
-    text.split('').forEach(function (ch) {
+    nameText.split('').forEach(function (ch, i) {
       if (ch === ' ') { nameEl.appendChild(document.createTextNode(' ')); return; }
       var s = document.createElement('span');
       s.className = 'ch';
       s.setAttribute('aria-hidden', 'true');
+      s.style.setProperty('--i', i);
       s.textContent = ch;
       nameEl.appendChild(s);
       letters.push(s);
     });
   }
+  if (nameEl) buildName();
   var hungry = null;
+
+  // ---- easter egg: feed every letter and the name becomes the Euler–Lagrange equation ----
+  function checkFull() {
+    if (transformed || !letters.length) return;
+    if (letters.every(function (l) { return l.classList.contains('is-fed'); })) {
+      transformed = true;
+      setTimeout(becomeEquation, 650);
+    }
+  }
+
+  function el(tag, cls, txt) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (txt != null) e.textContent = txt;
+    return e;
+  }
+
+  function frac(top, bottom) {
+    var f = el('span', 'eq-frac eq-bit');
+    f.appendChild(el('span', 'eq-num', top));
+    f.appendChild(el('span', 'eq-den', bottom));
+    return f;
+  }
+
+  function becomeEquation() {
+    nameEl.classList.add('is-leaving');
+    setTimeout(function () {
+      nameEl.classList.remove('is-leaving');
+      nameEl.textContent = '';
+      nameEl.classList.add('is-equation');
+      nameEl.setAttribute('aria-label', 'd/dt (∂L/∂q̇) − ∂L/∂q = 0, the Euler–Lagrange equation');
+      var eq = el('span', 'eq');
+      eq.setAttribute('aria-hidden', 'true');
+      [
+        frac('d', 'dt'),
+        el('span', 'eq-paren eq-bit', '('),
+        frac('∂ℒ', '∂q̇'),
+        el('span', 'eq-paren eq-bit', ')'),
+        el('span', 'eq-op eq-bit', '−'),
+        frac('∂ℒ', '∂q'),
+        el('span', 'eq-op eq-bit', '='),
+        el('span', 'eq-bit', '0')
+      ].forEach(function (bit, i) {
+        bit.style.setProperty('--i', i);
+        eq.appendChild(bit);
+      });
+      nameEl.appendChild(eq);
+      nameEl.title = sr ? 'Klikni da vratiš ime' : 'Click to get my name back';
+
+      var note = el('p', 'egg-note',
+        sr ? 'Sva slova nahranjena. Dejstvo je stacionarno. (Klikni na jednačinu da vratiš ime.)'
+           : 'Every letter fed. The action is stationary. (Click the equation to get my name back.)');
+      nameEl.insertAdjacentElement('afterend', note);
+    }, 700);
+  }
+
+  if (nameEl) {
+    nameEl.addEventListener('click', function () {
+      if (!nameEl.classList.contains('is-equation')) return;
+      nameEl.classList.add('is-leaving');
+      var note = nameEl.parentNode.querySelector('.egg-note');
+      if (note) note.classList.add('is-leaving');
+      setTimeout(function () {
+        if (note) note.remove();
+        nameEl.classList.remove('is-equation', 'is-leaving');
+        nameEl.removeAttribute('title');
+        buildName();
+        nameEl.classList.add('is-back');
+        setTimeout(function () { nameEl.classList.remove('is-back'); }, 1200);
+        transformed = false;
+      }, 500);
+    });
+  }
 
   function letterAt(cx, cy) {
     for (var i = 0; i < letters.length; i++) {
@@ -141,6 +220,7 @@
         eater.classList.remove('is-chomping');
         void eater.offsetWidth; // restart the animation
         eater.classList.add('is-chomping', 'is-fed');
+        checkFull();
       }, 160);
       held = null;
       return;

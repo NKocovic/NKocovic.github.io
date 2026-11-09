@@ -842,6 +842,90 @@ a.tier-item.has-tip {
   100% { transform: none; }
 }
 
+/* easter egg: with every letter fed, the name becomes the Euler–Lagrange equation */
+.site-name.is-leaving .ch,
+.site-name.is-leaving .eq-bit {
+  animation: drift-away 0.6s var(--ease-in-out) both;
+  animation-delay: calc(var(--i, 0) * 35ms);
+}
+
+@keyframes drift-away {
+  to { opacity: 0; transform: translateY(-14px) rotate(-8deg) scale(0.9); filter: blur(3px); }
+}
+
+.site-name.is-back .ch {
+  animation: rise 0.7s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+
+.site-name.is-equation {
+  cursor: pointer;
+}
+
+.eq {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12em;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.eq-bit {
+  display: inline-block;
+  animation: write-in 0.8s var(--ease-out) both;
+  animation-delay: calc(120ms + var(--i, 0) * 110ms);
+}
+
+@keyframes write-in {
+  from { opacity: 0; transform: translateY(10px); filter: blur(6px); }
+}
+
+.eq-frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.5em;
+  line-height: 1.15;
+}
+
+.eq-num {
+  padding: 0 0.2em 0.06em;
+  border-bottom: 0.07em solid currentColor;
+}
+
+.eq-den {
+  padding-top: 0.06em;
+}
+
+.eq-paren {
+  font-style: normal;
+  font-weight: 400;
+  transform: scaleY(1.35);
+  color: var(--muted);
+}
+
+.eq-op {
+  font-style: normal;
+  margin: 0 0.12em;
+  font-size: 0.8em;
+}
+
+.site-name.is-equation .eq-bit:last-child {
+  font-style: normal;
+  font-size: 0.8em;
+}
+
+.intro > .egg-note {
+  margin: 0 0 18px;
+  font-size: 0.875rem;
+  color: var(--accent);
+  animation: write-in 0.8s var(--ease-out) both 1s;
+}
+
+.intro > .egg-note.is-leaving {
+  animation: drift-away 0.4s var(--ease-in-out) both;
+}
+
 /* ---------- Buttons and small link rows ---------- */
 .btn {
   display: inline-flex;
