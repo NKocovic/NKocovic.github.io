@@ -51,7 +51,6 @@
   var medal = document.querySelector('.medal');
   if (medal) {
     var medalNote = medal.parentNode.querySelector('.medal-note');
-    var noteText = medalNote ? medalNote.textContent : '';
     var th = 0;
     var om = 0;
     var swinging = false;
@@ -61,9 +60,9 @@
     var G_L = 49;   // (g / l): a swing period of about 0.9 s
     var DAMP = 1.7;
 
-    var showNote = function (text, ms) {
+    var showNote = function (kind, ms) { // 'eq': the pendulum equation, 'loop': over the top
       if (!medalNote) return;
-      medalNote.textContent = text;
+      medalNote.dataset.show = kind;
       medalNote.classList.add('is-on');
       clearTimeout(noteTimer);
       noteTimer = setTimeout(function () { medalNote.classList.remove('is-on'); }, ms);
@@ -79,7 +78,7 @@
       }
       if (!looped && Math.abs(th) > Math.PI) {
         looped = true;
-        showNote('E > 2mgℓ', 2200); // enough energy to go over the top
+        showNote('loop', 2200); // enough energy to go over the top: E > 2mgl
       }
       var energy = om * om / 2 + G_L * (1 - Math.cos(th));
       if (energy < 0.01) { // under about a degree: let it rest
@@ -95,7 +94,7 @@
     };
 
     medal.addEventListener('click', function () {
-      showNote(noteText, 2600);
+      showNote('eq', 2600);
       if (reduce) return;
       om += 7.5 * (om < 0 ? -1 : 1); // push the way it's already going, like pumping a swing
       if (!swinging) {
