@@ -910,8 +910,8 @@ a.tier-item.has-tip {
 
 .eq-bit {
   display: inline-block;
-  animation: write-in 0.8s var(--ease-out) both;
-  animation-delay: calc(350ms + var(--i, 0) * 85ms);
+  animation: write-in 0.9s var(--ease-out) both;
+  animation-delay: calc(60ms + var(--i, 0) * 55ms);
 }
 
 @keyframes write-in {
@@ -984,6 +984,200 @@ a.tier-item.has-tip {
 
 @keyframes ph-show {
   to { opacity: var(--o, 1); }
+}
+
+/* initials easter egg: N becomes the Boltzmann law, K becomes curvature (sushi.js) */
+.egg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.egg-ch {
+  position: absolute;
+  display: block;
+  text-align: center;
+  white-space: pre;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+
+/* N and K: on top of the letters they swallow, in the accent colour */
+.egg-ch.is-initial {
+  z-index: 1;
+  color: var(--accent) !important;
+}
+
+/* N's copy lands exactly on the real N, so it just fades rather than blurring */
+.egg-ch.is-gone.is-same {
+  filter: none;
+  transition: opacity 0.35s ease;
+}
+
+/* the real N appears only as its flying copy touches down */
+.site-name .eq-init-n {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.site-name.n-landed .eq-init-n {
+  opacity: 1;
+}
+
+.egg-ch.is-gone {
+  transition: opacity 0.5s ease, filter 0.5s ease;
+  opacity: 0 !important;
+  filter: blur(8px);
+}
+
+.site-name.is-pending .eq-bit,
+.site-name.is-pending .eq-init {
+  opacity: 0;
+  animation: none;
+}
+
+.eq-grid {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 0.5em;
+  row-gap: 0.1em;
+  font-size: 0.6em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.eq-formula {
+  display: inline-flex;
+  align-items: center;
+}
+
+.eq-init {
+  display: inline-block;
+  font-style: italic;
+  color: var(--accent);
+}
+
+.site-name:not(.is-pending) .eq-init-k {
+  animation: init-in 0.7s var(--ease-out) both;
+}
+
+@keyframes init-in {
+  from { opacity: 0; transform: scale(0.8); filter: blur(8px); }
+}
+
+.eq-sub {
+  font-size: 0.55em;
+  vertical-align: -0.3em;
+  font-style: normal;
+}
+
+.eq-e {
+  margin-left: 0.1em;
+}
+
+.eq-sup {
+  align-self: flex-start;
+  margin-top: -0.1em;
+  font-size: 0.52em;
+  font-style: italic;
+}
+
+.eq-sup .eq-sub {
+  font-size: 0.75em;
+}
+
+.eq-frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.62em;
+  line-height: 1.15;
+  font-style: italic;
+}
+
+.eq-num {
+  padding: 0 0.2em 0.06em;
+  border-bottom: 0.07em solid currentColor;
+}
+
+.eq-den {
+  padding-top: 0.06em;
+}
+
+.eq-frac-k {
+  font-size: 0.6em;
+  line-height: 1.3;
+}
+
+.eq-frac-k .eq-num {
+  padding-bottom: 0.1em;
+}
+
+.eq-frac-k .eq-den {
+  padding: 0.12em 0.1em 0;
+}
+
+.eq-frac-k .eq-num,
+.eq-frac-k .eq-den {
+  font-style: italic;
+}
+
+.eq-pow {
+  margin-left: 0.16em;
+  font-size: 0.62em;
+  font-style: normal;
+  vertical-align: 0.6em;
+  line-height: 0;
+}
+
+.eq-pow:last-child {
+  margin-left: 0.1em;
+}
+
+.eq-graph svg {
+  display: block;
+  width: 2.3em;
+  height: auto;
+  overflow: visible;
+}
+
+.g-curve {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: ph-draw 1.2s var(--ease-in-out) 0.6s forwards;
+}
+
+.g-fill {
+  fill: var(--accent);
+  opacity: 0;
+  animation: g-fill 0.9s ease 1.6s forwards;
+}
+
+@keyframes g-fill {
+  to { opacity: 0.12; }
+}
+
+.osc {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 0.8;
+}
+
+.osc-r {
+  stroke: var(--accent);
+  stroke-width: 0.6;
+  stroke-dasharray: 1.5 1.5;
+}
+
+.osc-p {
+  fill: var(--accent);
 }
 
 .intro > .egg-note {

@@ -81,104 +81,279 @@
     return e;
   }
 
-  // 1) the fed letters gather into a ring, orbit faster and faster, and collapse into a point
-  function becomeEquation() {
-    var box = nameEl.getBoundingClientRect();
-    var cx = box.left + box.width / 2;
-    var cy = box.top + box.height / 2;
-    var rx = Math.min(box.width / 2, 170);
-    var ry = box.height * 0.55;
-    var items = letters.map(function (l, i) {
-      var r = l.getBoundingClientRect();
-      return { el: l, ox: r.left + r.width / 2, oy: r.top + r.height / 2, a0: Math.PI + (i / letters.length) * Math.PI * 2 };
-    });
-    var GATHER = 900;
-    var COLLAPSE = 1500;
-    var t0 = performance.now();
-    var ease = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+  // 1) the letters are copied onto a floating layer; the other letters spiral away while
+  //    N and K fly to their places in two formulas built (hidden) where the name was
+  var stopGraphs = null;
 
-    nameEl.classList.add('is-orbiting');
+  function becomeEquation() {
+    var cs = getComputedStyle(nameEl);
+    var accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#93a9ff';
+    var layer = el('div', 'egg-layer');
+    layer.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(layer);
+
+    // copies of every letter, floating exactly where the letters are
+    var clones = letters.map(function (l) {
+      var r = l.getBoundingClientRect();
+      var c = el('span', 'egg-ch', l.textContent);
+      c.style.left = r.left + 'px';
+      c.style.top = r.top + 'px';
+      c.style.width = r.width + 'px';
+      c.style.height = r.height + 'px';
+      c.style.lineHeight = r.height + 'px';
+      c.style.font = cs.font;
+      c.style.color = getComputedStyle(l).color;
+      layer.appendChild(c);
+      return { el: c, cx: r.left + r.width / 2, cy: r.top + r.height / 2, gulps: [] };
+    });
+
+    // first name -> N, surname -> K
+    var kIndex = -1;
+    letters.forEach(function (l, i) { if (kIndex < 0 && i > 0 && l.textContent === 'K') kIndex = i; });
+    if (kIndex < 0) kIndex = Math.ceil(letters.length / 2);
+    var initN = clones[0];
+    var initK = clones[kIndex];
+    initN.el.classList.add('is-initial');
+    initK.el.classList.add('is-initial');
+    var others = [];
+    clones.forEach(function (it, i) {
+      if (it === initN || it === initK) return;
+      var homeIndex = i < kIndex ? 0 : kIndex;
+      it.home = i < kIndex ? initN : initK;
+      it.start = (Math.abs(i - homeIndex) - 1) * 75;  // nearest letters go first
+      others.push(it);
+    });
+    initN.size = kIndex - 1;
+    initK.size = letters.length - kIndex - 1;
+
+    // build the formulas (hidden) and find where N and kappa will sit
+    buildEquation();
+    [[initN, '.eq-init-n'], [initK, '.eq-init-k']].forEach(function (pair) {
+      var it = pair[0];
+      var tr = nameEl.querySelector(pair[1]).getBoundingClientRect();
+      it.s = tr.height / parseFloat(it.el.style.height);
+      it.dx = tr.left + tr.width / 2 - it.cx;
+      it.dy = tr.top + tr.height / 2 - it.cy;
+    });
+
+    var GULP = 760;                       // how long one letter takes to be swallowed
+    var STAGGER = 60;                     // letters leave one after another, nearest first
+    var absorbEnd = others.reduce(function (m, it) { return Math.max(m, it.start * (STAGGER / 75) + GULP); }, 0);
+    var GLIDE_START = absorbEnd - 320;    // initials start moving before the last gulp lands
+    var GLIDE = 1150;
+    var REVEAL_AT = 0.78;                 // formulas start writing in before the initials land
+    var t0 = performance.now();
+    var revealed = false;
+    var landed = false;
+    var easeInOut = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+    var easeInOutSine = function (t) { return -(Math.cos(Math.PI * t) - 1) / 2; };
+    var bez = function (a, b, c, t) { var u = 1 - t; return u * u * a + 2 * u * t * b + t * t * c; };
+    others.forEach(function (it) {
+      it.start = it.start * (STAGGER / 75);
+      it.lift = 18 + Math.random() * 16;   // each arc a little different
+      it.tilt = (Math.random() - 0.5) * 30;
+    });
+
     function frame(now) {
       var t = now - t0;
-      var g = ease(Math.min(1, t / GATHER));
-      var k = Math.max(0, Math.min(1, (t - GATHER) / COLLAPSE));
-      var spin = Math.pow(k, 1.7) * Math.PI * 3.2 + g * 0.6; // speeds up as the ring tightens
-      var shrink = 1 - k * k;
-      items.forEach(function (it) {
-        var a = it.a0 + spin;
-        var tx = cx + rx * shrink * Math.cos(a);
-        var ty = cy + ry * shrink * Math.sin(a);
-        var x = it.ox + (tx - it.ox) * g;
-        var y = it.oy + (ty - it.oy) * g;
-        it.el.style.transform = 'translate(' + (x - it.ox).toFixed(1) + 'px,' + (y - it.oy).toFixed(1) + 'px) scale(' + (1 - 0.65 * k).toFixed(3) + ')';
-        it.el.style.opacity = String(1 - Math.max(0, (k - 0.6) / 0.4));
+
+      // the initials: a springy swell with every gulp, a glow that grows, then a smooth arc
+      // to their place in the formulas (computed first, so swallowed letters chase them)
+      var f = Math.max(0, Math.min(1, (t - GLIDE_START) / GLIDE));
+      var fe = easeInOut(f);
+      [initN, initK].forEach(function (it) {
+        var swell = it.gulps.reduce(function (a, g) {
+          var dt = now - g;
+          return a + 0.16 * Math.exp(-dt / 260) * Math.sin(dt / 60);
+        }, 0);
+        var full = it.size ? it.gulps.length / it.size : 1;
+        var lift = 46;
+        it.x = bez(0, it.dx * 0.45, it.dx, fe);
+        it.y = bez(0, it.dy * 0.2 - lift, it.dy, fe);
+        var sc = (1 + swell) * (1 + (it.s - 1) * fe);
+        it.el.style.transform = 'translate(' + it.x.toFixed(2) + 'px,' + it.y.toFixed(2) + 'px) scale(' + sc.toFixed(4) + ')';
+        it.el.style.textShadow = '0 0 ' + (0.08 + 0.42 * Math.min(1, full)).toFixed(3) + 'em ' + accent;
       });
-      if (t < GATHER + COLLAPSE) requestAnimationFrame(frame);
-      else showEquation();
+
+      // every other letter flows along a curve into its initial's current position
+      others.forEach(function (it) {
+        var q = Math.max(0, Math.min(1, (t - it.start) / GULP));
+        var e = easeInOutSine(q) * easeInOutSine(q) * (3 - 2 * easeInOutSine(q)); // gentle start, firm finish
+        var hx = it.home.cx + (it.home.x || 0) - it.cx;
+        var hy = it.home.cy + (it.home.y || 0) - it.cy;
+        var x = bez(0, hx * 0.5, hx, e);
+        var y = bez(0, hy * 0.5 - it.lift, hy, e);
+        var sc = 1 - 0.85 * e;
+        var rot = it.tilt * Math.sin(Math.PI * e);
+        var blur = Math.sin(Math.PI * q) * 1.1;
+        it.el.style.transform = 'translate(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px) rotate(' + rot.toFixed(1) + 'deg) scale(' + sc.toFixed(4) + ')';
+        it.el.style.opacity = String(q < 0.7 ? 1 : Math.max(0, 1 - (q - 0.7) / 0.3));
+        it.el.style.filter = blur > 0.05 ? 'blur(' + blur.toFixed(2) + 'px)' : '';
+        if (q >= 1 && !it.done) {
+          it.done = true;
+          it.home.gulps.push(now);
+        }
+      });
+
+      if (!revealed && f >= REVEAL_AT) {
+        revealed = true;
+        reveal(layer, initN, initK);
+      }
+      if (!landed && f >= 0.97) {
+        // N touches down on the real N: hand over without a double image
+        landed = true;
+        nameEl.classList.add('n-landed');
+        initN.el.classList.add('is-gone', 'is-same');
+      }
+      if (t < GLIDE_START + GLIDE + 50) requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
   }
 
-  // 2) a flash, then Hamilton's equations in Poisson-bracket form write themselves in,
-  //    next to a phase portrait whose orbit draws itself and a point starts moving along it
-  function showEquation() {
-    nameEl.classList.remove('is-orbiting');
-    nameEl.textContent = '';
-    nameEl.classList.add('is-equation');
-    nameEl.setAttribute('aria-label', "q dot equals the Poisson bracket of q and H; p dot equals the Poisson bracket of p and H. Hamilton's equations.");
-    nameEl.title = sr ? 'Klikni da vratiš ime' : 'Click to get my name back';
-
+  // 2) N lands as N, K dissolves into kappa, the rest of both formulas writes in,
+  //    and the two little graphs come alive
+  function reveal(layer, initN, initK) {
+    if (initK) initK.el.classList.add('is-gone'); // K dissolves into kappa (N lands separately)
     nameEl.appendChild(el('span', 'eq-flash'));
-    var eq = el('span', 'eq');
-    eq.setAttribute('aria-hidden', 'true');
-    var lines = el('span', 'eq-lines');
-    var idx = 0;
-    function line(v) {
-      var ln = el('span', 'eq-line');
-      [[v + '̇', 'var'], ['=', 'op'], ['{', 'brace'], [v, 'var'], [',', 'comma'], ['ℋ', 'ham'], ['}', 'brace']]
-        .forEach(function (p) {
-          var b = el('span', 'eq-bit eq-' + p[1], p[0]);
-          b.style.setProperty('--i', idx++);
-          ln.appendChild(b);
-        });
-      return ln;
-    }
-    lines.appendChild(line('q'));
-    lines.appendChild(line('p'));
-    eq.appendChild(lines);
-
-    var phase = el('span', 'eq-phase eq-bit');
-    phase.style.setProperty('--i', idx);
-    var orbit = 'M20,0 A20,13 0 1,1 -20,0 A20,13 0 1,1 20,0';
-    var dot = function (r, o, begin) {
-      return '<circle class="ph-dot" r="' + r + '" style="--o:' + o + ';--d:' + begin + 's">' +
-        '<animateMotion dur="3.4s" repeatCount="indefinite" begin="' + begin + 's" path="' + orbit + '"/></circle>';
-    };
-    phase.innerHTML =
-      '<svg viewBox="-30 -24 60 48" aria-hidden="true" focusable="false">' +
-      '<path class="ph-axis" d="M-27 0H26M0 21V-20"/>' +
-      '<text class="ph-label" x="24" y="8">q</text><text class="ph-label" x="3" y="-15">p</text>' +
-      '<ellipse class="ph-orbit" rx="20" ry="13" pathLength="100"/>' +
-      dot(1.2, 0.2, 2.9) + dot(1.8, 0.45, 2.82) + dot(2.6, 1, 2.74) +
-      '</svg>';
-    eq.appendChild(phase);
-    nameEl.appendChild(eq);
-
+    nameEl.classList.remove('is-pending');
+    setTimeout(function () { layer.remove(); }, 600);
+    fillGraphs();
     var note = el('p', 'egg-note',
-      sr ? 'Sva slova nahranjena. Sistem sada evoluira pod ℋ. (Klikni na jednačine da vratiš ime.)'
-         : 'Every letter fed. The system now evolves under ℋ. (Click the equations to get my name back.)');
+      sr ? 'Sva slova nahranjena. N je otišlo Bolcmanu, K je postalo krivina. (Klikni na jednačine da vratiš ime.)'
+         : 'Every letter fed. N went to Boltzmann, K became curvature. (Click the equations to get my name back.)');
     nameEl.insertAdjacentElement('afterend', note);
+  }
+
+  function buildEquation() {
+    nameEl.textContent = '';
+    nameEl.classList.add('is-equation', 'is-pending');
+    nameEl.setAttribute('aria-label', 'N equals N zero times e to the minus E over k B T, the Boltzmann law. Kappa equals the absolute value of y double prime, over one plus y prime squared, to the power three halves: the curvature.');
+    nameEl.title = sr ? 'Klikni da vratiš ime' : 'Click to get my name back';
+    var grid = el('span', 'eq-grid');
+    grid.setAttribute('aria-hidden', 'true');
+    var i = 0;
+    var bit = function (cls, txt) {
+      var b = el('span', 'eq-bit ' + cls, txt);
+      b.style.setProperty('--i', i++);
+      return b;
+    };
+
+    // Boltzmann: N = N0 e^(-E / kB T)
+    var f1 = el('span', 'eq-formula');
+    f1.appendChild(el('span', 'eq-init eq-init-n', 'N'));
+    f1.appendChild(bit('eq-op', '='));
+    var n0 = bit('eq-var', 'N');
+    n0.appendChild(el('sub', 'eq-sub', '0'));
+    f1.appendChild(n0);
+    f1.appendChild(bit('eq-e', 'e'));
+    var ex = bit('eq-sup', '−E/k');
+    ex.appendChild(el('sub', 'eq-sub', 'B'));
+    ex.appendChild(document.createTextNode('T'));
+    f1.appendChild(ex);
+    var g1 = bit('eq-graph eq-graph-bz', null);
+
+    // curvature of a graph y(x): kappa = |y''| / (1 + y'^2)^(3/2)
+    var f2 = el('span', 'eq-formula');
+    f2.appendChild(el('span', 'eq-init eq-init-k', 'κ'));
+    f2.appendChild(bit('eq-op', '='));
+    var fr = bit('eq-frac eq-frac-k', null);
+    fr.appendChild(el('span', 'eq-num', '|y″|'));
+    var den = el('span', 'eq-den');
+    den.appendChild(document.createTextNode('(1 + y′'));
+    den.appendChild(el('sup', 'eq-pow', '2'));
+    den.appendChild(document.createTextNode(')'));
+    den.appendChild(el('sup', 'eq-pow', '3/2'));
+    fr.appendChild(den);
+    f2.appendChild(fr);
+    var g2 = bit('eq-graph eq-graph-k', null);
+
+    grid.appendChild(f1);
+    grid.appendChild(g1);
+    grid.appendChild(f2);
+    grid.appendChild(g2);
+    nameEl.appendChild(grid);
+  }
+
+  function fillGraphs() {
+    // Boltzmann: the exponential fall-off draws itself, then a bead slides down it and back
+    var d = '';
+    for (var x = 6; x <= 56; x += 2) {
+      d += (x === 6 ? 'M' : 'L') + x + ' ' + (34 - 28 * Math.exp(-(x - 6) / 10)).toFixed(2);
+    }
+    nameEl.querySelector('.eq-graph-bz').innerHTML =
+      '<svg viewBox="0 0 60 42" aria-hidden="true" focusable="false">' +
+      '<path class="g-fill" d="' + d + 'L56 36L6 36Z"/>' +
+      '<path class="ph-axis" d="M5 2V36H58"/>' +
+      '<text class="ph-label" x="-2" y="7">N</text><text class="ph-label" x="54" y="43">E</text>' +
+      '<path class="g-curve" pathLength="100" d="' + d + '"/>' +
+      '<circle class="ph-dot" r="2.3" style="--d:1.7s">' +
+      '<animateMotion dur="3.2s" begin="1.7s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;0.5;1" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" path="' + d + '"/>' +
+      '</circle></svg>';
+
+    // curvature: a wave draws itself, then an osculating circle (radius 1/kappa) rides along it
+    var A = 8, L = 7.6;
+    var f = function (x) { return 20 + A * Math.sin((x - 6) / L); };
+    var wave = '';
+    for (var w = 6; w <= 56; w += 1) wave += (w === 6 ? 'M' : 'L') + w + ' ' + f(w).toFixed(2);
+    var kg = nameEl.querySelector('.eq-graph-k');
+    kg.innerHTML =
+      '<svg viewBox="0 0 60 42" aria-hidden="true" focusable="false">' +
+      '<path class="g-curve" pathLength="100" d="' + wave + '"/>' +
+      '<line class="osc-r" x1="0" y1="0" x2="0" y2="0"/>' +
+      '<circle class="osc" r="0"/>' +
+      '<circle class="osc-p" r="1.9"/>' +
+      '</svg>';
+    var circ = kg.querySelector('.osc');
+    var rad = kg.querySelector('.osc-r');
+    var pt = kg.querySelector('.osc-p');
+    [circ, rad, pt].forEach(function (n) { n.style.opacity = 0; });
+
+    var t0 = performance.now() + 1800;
+    var alive = true;
+    function loop(now) {
+      if (!alive) return;
+      var t = Math.max(0, now - t0) / 1000;
+      var u = (1 - Math.cos(t * Math.PI / 3.5)) / 2; // eases back and forth along the curve
+      var x = 8 + 46 * u;
+      var y = f(x);
+      var d1 = (A / L) * Math.cos((x - 6) / L);
+      var d2 = -(A / (L * L)) * Math.sin((x - 6) / L);
+      var k = d2 / Math.pow(1 + d1 * d1, 1.5);
+      var n = Math.sqrt(1 + d1 * d1);
+      var R = Math.abs(1 / k);
+      var show = now < t0 ? 0 : Math.max(0, Math.min(1, (30 - R) / 18));
+      if (Math.abs(k) > 1e-4) {
+        var cxp = x + (-d1 / n) / k;
+        var cyp = y + (1 / n) / k;
+        circ.setAttribute('cx', cxp.toFixed(2));
+        circ.setAttribute('cy', cyp.toFixed(2));
+        circ.setAttribute('r', Math.min(R, 60).toFixed(2));
+        rad.setAttribute('x1', x.toFixed(2));
+        rad.setAttribute('y1', y.toFixed(2));
+        rad.setAttribute('x2', cxp.toFixed(2));
+        rad.setAttribute('y2', cyp.toFixed(2));
+      }
+      pt.setAttribute('cx', x.toFixed(2));
+      pt.setAttribute('cy', y.toFixed(2));
+      circ.style.opacity = (show * 0.85).toFixed(3);
+      rad.style.opacity = (show * 0.6).toFixed(3);
+      pt.style.opacity = now < t0 ? 0 : 1;
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+    stopGraphs = function () { alive = false; };
   }
 
   if (nameEl) {
     nameEl.addEventListener('click', function () {
       if (!nameEl.classList.contains('is-equation')) return;
+      if (stopGraphs) { stopGraphs(); stopGraphs = null; }
       nameEl.classList.add('is-leaving');
       var note = nameEl.parentNode.querySelector('.egg-note');
       if (note) note.classList.add('is-leaving');
       setTimeout(function () {
         if (note) note.remove();
-        nameEl.classList.remove('is-equation', 'is-leaving');
+        nameEl.classList.remove('is-equation', 'is-leaving', 'n-landed');
         nameEl.removeAttribute('title');
         buildName();
         nameEl.classList.add('is-back');
