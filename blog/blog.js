@@ -162,7 +162,17 @@
               var li = make('li');
               var chip = make(item.link ? 'a' : 'span', 'tier-item', tr(item.name));
               if (item.link) chip.href = item.link;
-              if (item.note) chip.title = tr(item.note);
+              if (item.note) {
+                // shown as a bubble on hover, keyboard focus or tap (see .tier-item[data-note] in style.css)
+                chip.dataset.note = tr(item.note);
+                if (!item.link) chip.tabIndex = 0;
+                var side = function () {
+                  var r = chip.getBoundingClientRect();
+                  chip.classList.toggle('tip-right', r.left + r.width / 2 > window.innerWidth / 2);
+                };
+                chip.addEventListener('pointerenter', side);
+                chip.addEventListener('focus', side);
+              }
               li.appendChild(chip);
               ul.appendChild(li);
               total++;

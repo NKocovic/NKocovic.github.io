@@ -2,12 +2,30 @@
   {
     "id": "belgrade-restaurants",
     "title": { "en": "Best restaurants in Belgrade", "sr": "Najbolji restorani u Beogradu" },
+    "updated": "2026-11-09",
+    "note": { "en": "Hover over or tap a place for my take.", "sr": "Pređi mišem preko mesta ili ga dodirni za moj komentar." },
     "tiers": {
-      "S": [],
-      "A": [],
-      "B": [],
-      "C": [],
-      "D": []
+      "S": [
+        { "name": "Skylounge", "note": { "en": "Best sushi in the city, by far.", "sr": "Daleko najbolji suši u gradu." } },
+        { "name": "Comunale", "note": { "en": "Great pasta and a great quality/price ratio.", "sr": "Odlična pasta i odličan odnos cene i kvaliteta." } },
+        { "name": "Rustique", "note": { "en": "Best pizza in the city. The thinnest you'll find.", "sr": "Najbolja pica u gradu. Tanju nećeš naći." } },
+        { "name": "Giovanni's", "note": { "en": "Also great, thin pizza. Get the one with pistachio.", "sr": "Takođe odlična, tanka pica. Preporuka: ona sa pistaćima." } },
+        { "name": "Koordinata Street", "note": { "en": "A true gastronomic experience. Recommended.", "sr": "Pravo gastronomsko iskustvo. Preporuka." } }
+      ],
+      "A": [
+        { "name": "Cirino drvce", "note": { "en": "Great pljeskavica. Was S, but fell off.", "sr": "Odlična pljeskavica. Bio je S, ali je pao." } },
+        { "name": "Rubin", "note": { "en": "Fair food at a fair price. Great for dinners where the food isn't the topic: the view is the selling point.", "sr": "Pošteno jelo po poštenoj ceni. Odličan za večere na kojima hrana nije tema: pogled je glavni adut." } },
+        { "name": "Sushi XO", "note": { "en": "Good sushi at a fair enough price.", "sr": "Dobar suši po sasvim pristojnoj ceni." } },
+        { "name": "Iva New Balkan", "note": { "en": "Good, but the prices are a bit exaggerated.", "sr": "Dobro, ali su cene malo preterane." } },
+        { "name": "Klub književnika", "note": { "en": "Great food at a steep price. Try the tender beef.", "sr": "Odlična hrana po visokoj ceni. Probaj junetinu (tender beef)." } },
+        { "name": "Enso", "note": { "en": "Try the rabbit. The beef Wellington is also pristine.", "sr": "Probaj zeca. I beef Wellington je besprekoran." } }
+      ],
+      "B": [
+        { "name": "Babaroga", "note": { "en": "Nothing special. Fair steak.", "sr": "Ništa posebno. Pristojan stek." } }
+      ],
+      "C": [
+        { "name": "Mezestoran Dvorištance", "note": { "en": "Overpriced. Would avoid.", "sr": "Preskupo. Izbegavao bih." } }
+      ]
     }
   }
 ]

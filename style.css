@@ -560,12 +560,56 @@ a.tier-item:focus-visible {
   transform: translateY(-2px);
 }
 
-.tier-item[title] {
+/* a place's note: a small bubble above it on hover, focus or tap */
+.tier-item[data-note] {
+  position: relative;
   cursor: help;
+  outline: none;
 }
 
-a.tier-item[title] {
+a.tier-item[data-note] {
   cursor: pointer;
+}
+
+.tier-item[data-note]::after {
+  content: attr(data-note);
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 10px);
+  z-index: 5;
+  width: max-content;
+  max-width: min(260px, 72vw);
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px) scale(0.98);
+  transform-origin: bottom left;
+  transition: opacity 0.2s ease, transform 0.3s var(--ease-out);
+}
+
+.tier-item.tip-right[data-note]::after {
+  left: auto;
+  right: 0;
+  transform-origin: bottom right;
+}
+
+.tier-item[data-note]:hover,
+.tier-item[data-note]:focus-visible,
+.tier-item[data-note]:focus {
+  border-color: currentColor;
+}
+
+.tier-item[data-note]:hover::after,
+.tier-item[data-note]:focus::after {
+  opacity: 1;
+  transform: none;
 }
 
 .tier-empty {
