@@ -59,12 +59,8 @@
         {
           "name": "Koordinata Street",
           "note": {
-            "en": "A true gastronomic experience. Recommended.",
-            "sr": "Pravo gastronomsko iskustvo. Preporuka."
-          },
-          "try": {
-            "en": "Anything on the menu: it's all great.",
-            "sr": "Bilo šta sa menija, sve je odlično."
+            "en": "A true gastronomic experience. Anything on the menu is great.",
+            "sr": "Pravo gastronomsko iskustvo. Sve sa menija je odlično."
           }
         }
       ],
@@ -149,10 +145,6 @@
           "note": {
             "en": "Nothing special. Fair steak.",
             "sr": "Ništa posebno. Pristojan stek."
-          },
-          "try": {
-            "en": "Any steak.",
-            "sr": "Bilo koji stek."
           }
         },
         {
@@ -182,10 +174,6 @@
           "note": {
             "en": "Good enough, with some interesting flavours.",
             "sr": "Sasvim solidno, ima neke zanimljive ukuse."
-          },
-          "try": {
-            "en": "Anything, really.",
-            "sr": "Bilo šta, stvarno."
           }
         },
         {
@@ -219,10 +207,6 @@
           "note": {
             "en": "Overpriced. Would avoid.",
             "sr": "Preskupo. Izbegavao bih."
-          },
-          "try": {
-            "en": "Nothing special there.",
-            "sr": "Ništa posebno."
           }
         },
         {
