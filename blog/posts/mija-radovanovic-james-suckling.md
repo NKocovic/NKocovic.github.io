@@ -1,5 +1,7 @@
 Mija Radovanović has received its reviews from James Suckling, and they are excellent.
 
+![At the tasting](/blog/images/mija-radovanovic-tasting.jpg)
+
 ## A 98 for the Grand Reserve
 
 The winery's flagship, the **Cabernet Sauvignon Grand Reserve**, earned **98/100**: the highest score of any Serbian wine. That is a score you normally only see next to far more expensive bottles. The only comparison in Serbia is Kremen Kamen.
