@@ -238,5 +238,50 @@
         }
       ]
     }
+  },
+  {
+    "id": "belgrade-burek",
+    "title": {
+      "en": "Best burek in Belgrade",
+      "sr": "Najbolji burek u Beogradu"
+    },
+    "updated": "2026-11-10",
+    "ranked": [
+      {
+        "name": "Kirćanski",
+        "note": {
+          "en": "Perfect balance in the amount of fat.",
+          "sr": "Savršen balans kad je u pitanju količina masti."
+        }
+      },
+      {
+        "name": "Petrović",
+        "note": {
+          "en": "Very fat, but insanely good dough. My everyday choice.",
+          "sr": "Veoma mastan, ali neverovatno dobro testo. Moj svakodnevni izbor."
+        }
+      },
+      {
+        "name": "Beogradska Buregdžinica",
+        "note": {
+          "en": "Overhyped, but still pretty good.",
+          "sr": "Precenjen, ali i dalje prilično dobar."
+        }
+      },
+      {
+        "name": "Trpković",
+        "note": {
+          "en": "Fantastic ingredients. My pick if you want burek with meat.",
+          "sr": "Fantastični sastojci. Moja preporuka ako želiš burek sa mesom."
+        }
+      },
+      {
+        "name": "Ljupče",
+        "note": {
+          "en": "Very hyped, but on par with the other four. Great dough too.",
+          "sr": "Veoma hajpovan, ali na nivou ostale četvorice. I testo je odlično."
+        }
+      }
+    ]
   }
 ]

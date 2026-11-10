@@ -146,6 +146,28 @@
           }
           art.appendChild(head);
 
+          // a numbered list ("ranked": [...]) instead of tiers: 1, 2, 3... with the note shown
+          if (list.ranked) {
+            if (list.note) art.appendChild(make('p', 'tierlist-note', tr(list.note)));
+            var ol = make('ol', 'ranked');
+            list.ranked.forEach(function (item, i) {
+              if (typeof item === 'string') item = { name: item };
+              var li = make('li', 'rank');
+              li.style.setProperty('--i', i);
+              li.appendChild(make('span', 'rank-n', String(i + 1)));
+              var body = make('div', 'rank-body');
+              var name = make(item.link ? 'a' : 'span', 'rank-name', tr(item.name));
+              if (item.link) name.href = item.link;
+              body.appendChild(name);
+              if (item.note) body.appendChild(make('span', 'rank-note', tr(item.note)));
+              li.appendChild(body);
+              ol.appendChild(li);
+            });
+            art.appendChild(ol);
+            tierBox.appendChild(art);
+            return;
+          }
+
           var tiers = list.tiers || {};
           var keys = ORDER.filter(function (k) { return k in tiers; })
             .concat(Object.keys(tiers).filter(function (k) { return ORDER.indexOf(k) < 0; }));

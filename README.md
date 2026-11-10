@@ -66,6 +66,7 @@ in English and in Serbian (`blog/#tierlists`). Each list looks like this:
 - `title`, `note` and an item's `name` can be plain text, or `{ "en": ..., "sr": ... }` when they differ by language.
 - `updated` and `note` are optional. A list with no items yet says "Coming soon".
 - To add another list, add another `{ ... }` block to the array, separated by a comma.
+- For a numbered list (1, 2, 3…) instead of tiers, use `"ranked": [ ... ]` in place of `"tiers"`, with items in order; each item's note is shown under its name.
 
 ## Previewing locally
 
