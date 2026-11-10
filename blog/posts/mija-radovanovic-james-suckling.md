@@ -1,8 +1,8 @@
-Mija Radovanović has received its reviews from James Suckling, and they are excellent.
+Podrum Radovanović has received its reviews from James Suckling, and they are excellent.
 
-![At the tasting](/blog/images/mija-radovanovic-tasting.jpg)
+![Mija Radovanović at the tasting](/blog/images/mija-radovanovic-tasting.jpg)
 
-He is still working, caring for his wines and experimenting with new ideas, especially with rosé. Truly one of the greats of Serbian winemaking.
+Mija Radovanović himself is still working, caring for his wines and experimenting with new ideas, especially with rosé. Truly one of the greats of Serbian winemaking.
 
 ## A 98 for the Grand Reserve
 
