@@ -5,7 +5,7 @@
       "en": "Best restaurants in Belgrade",
       "sr": "Najbolji restorani u Beogradu"
     },
-    "updated": "2026-11-09",
+    "updated": "2026-11-10",
     "note": {
       "en": "Hover over or tap a place for my take and what to order.",
       "sr": "Pređi mišem preko mesta ili ga dodirni za moj komentar i šta da naručiš."
@@ -129,6 +129,17 @@
           "try": {
             "en": "The Karađorđeva schnitzel.",
             "sr": "Karađorđevu šniclu."
+          }
+        },
+        {
+          "name": "Bigz 011",
+          "note": {
+            "en": "Interesting food, but the view is what makes it A tier.",
+            "sr": "Zanimljiva hrana, ali pogled je ono što ga čini A tierom."
+          },
+          "try": {
+            "en": "The risotto with coffee. A must.",
+            "sr": "Rižoto sa kafom. Obavezno."
           }
         }
       ],
