@@ -380,7 +380,11 @@ h2 {
 }
 
 .post img {
-  max-width: 100%;
+  display: block;
+  margin: 2rem auto;
+  max-width: min(100%, 22rem);
+  max-height: 30rem;
+  width: auto;
   height: auto;
   border-radius: 6px;
 }
