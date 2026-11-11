@@ -8,8 +8,8 @@
     ? { empty: 'Još nema objava. Uskoro.', missing: 'Ova objava ne postoji.', failed: 'Objava trenutno ne može da se učita.' }
     : { empty: 'No posts yet. Check back soon.', missing: 'This post doesn’t exist.', failed: 'This couldn’t be loaded right now.' };
   var tierText = sr
-    ? { soon: 'Uskoro.', none: 'Još nema lista.', updated: 'ažurirano', tryLabel: 'Probaj' }
-    : { soon: 'Coming soon.', none: 'No lists yet.', updated: 'updated', tryLabel: 'Try' };
+    ? { soon: 'Uskoro.', none: 'Još nema lista.', updated: 'ažurirano', tryLabel: 'Probaj', map: 'Mapa', legend: 'Tačka označava mesta sa jelom koje preporučujem.' }
+    : { soon: 'Coming soon.', none: 'No lists yet.', updated: 'updated', tryLabel: 'Try', map: 'Map', legend: 'A dot marks places with a dish I recommend.' };
   var dateFmt = new Intl.DateTimeFormat(sr ? 'sr-Latn' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
   function formatDate(iso) {
@@ -126,6 +126,18 @@
       return el;
     };
 
+    // a list with "maps": "restoran Beograd" gets a Google Maps link per place: it searches for
+    // the name (without any bracketed part) plus those words; an item's own "map" replaces the search
+    var mapLink = function (list, item, cls) {
+      if (!list.maps && !item.map) return null;
+      var q = item.map || (tr(item.name).replace(/\s*\(.*?\)/g, '') + ' ' + list.maps);
+      var a = make('a', cls, tierText.map + ' ↗');
+      a.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+      a.target = '_blank';
+      a.rel = 'noopener';
+      return a;
+    };
+
     fetch(base + 'tierlists.json', { cache: 'no-cache' })
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (lists) {
@@ -158,7 +170,12 @@
               var body = make('div', 'rank-body');
               var name = make(item.link ? 'a' : 'span', 'rank-name', tr(item.name));
               if (item.link) name.href = item.link;
-              body.appendChild(name);
+              var rm = item.link ? null : mapLink(list, item, 'rank-map');
+              if (rm) {
+                var head = make('span', 'rank-head');
+                head.append(name, rm);
+                body.appendChild(head);
+              } else body.appendChild(name);
               if (item.note) body.appendChild(make('span', 'rank-note', tr(item.note)));
               li.appendChild(body);
               ol.appendChild(li);
@@ -184,7 +201,8 @@
               var li = make('li');
               var chip = make(item.link ? 'a' : 'span', 'tier-item', tr(item.name));
               if (item.link) chip.href = item.link;
-              if (item.note || item.try) {
+              var tm = item.link ? null : mapLink(list, item, 'tip-map');
+              if (item.note || item.try || tm) {
                 // a bubble with my take and what to order, shown on hover, keyboard focus or tap
                 chip.classList.add('has-tip');
                 if (item.try) chip.classList.add('has-try');
@@ -196,6 +214,7 @@
                   t.appendChild(document.createTextNode(' ' + tr(item.try)));
                   tip.appendChild(t);
                 }
+                if (tm) tip.appendChild(tm);
                 chip.appendChild(tip);
                 if (!item.link) chip.tabIndex = 0;
                 var side = function () {
@@ -216,6 +235,7 @@
 
           var note = tr(list.note) || (total ? '' : tierText.soon);
           if (note) art.appendChild(make('p', 'tierlist-note', note));
+          if (board.querySelector('.has-try')) art.appendChild(make('p', 'tier-legend', tierText.legend));
           art.appendChild(board);
           tierBox.appendChild(art);
         });

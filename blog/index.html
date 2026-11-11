@@ -17,26 +17,17 @@
   <meta property="og:image" content="https://nkocovic.github.io/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css">
   <script>
+    // the theme picked with the light/dark switch, if any, before the first paint
+    try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (err) {}
     document.documentElement.classList.add('js');
     window.__revealFailsafe = setTimeout(function () { document.documentElement.classList.remove('js'); }, 2500);
-    // Page transitions: slide forward into the blog, back out of it, cross-fade between languages.
+    // Arriving from another page of the site: skip the header's load animation, the page fade covers it.
     addEventListener('pagereveal', function (e) {
       if (!e.viewTransition) return;
       e.viewTransition.ready.catch(function () {}); // a skipped transition (e.g. a quick second click) is fine
       document.documentElement.classList.add('no-intro');
-      try {
-        var depth = function (u) { var p = new URL(u).pathname; return /\/blog\/post\.html$/.test(p) ? 2 : /\/blog\//.test(p) ? 1 : 0; };
-        var from = navigation.activation.from;
-        if (from) {
-          var d = depth(location.href) - depth(from.url);
-          e.viewTransition.types.add(d > 0 ? 'forward' : d < 0 ? 'back' : 'swap');
-        }
-      } catch (err) {}
     });
     addEventListener('pageswap', function (e) {
       if (e.viewTransition) e.viewTransition.ready.catch(function () {});
@@ -56,7 +47,7 @@
         </span>
       </nav>
       <a class="home-link" href="../">Nikola Kočović</a>
-      <h1 class="vt-blog">Blog</h1>
+      <h1>Blog</h1>
       <p class="lede">Writing about everything: physics, music, food, and whatever else is on my mind. Plus a few tier lists.</p>
       <p class="jump-links"><a href="#posts">Posts</a><a href="#tierlists">Tier lists</a></p>
     </header>

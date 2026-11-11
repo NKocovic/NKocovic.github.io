@@ -1,6 +1,7 @@
 [
   {
     "id": "belgrade-restaurants",
+    "maps": "restoran Beograd",
     "title": {
       "en": "Best restaurants in Belgrade",
       "sr": "Najbolji restorani u Beogradu"
@@ -171,6 +172,7 @@
         },
         {
           "name": "SushiCo Zen (Galerija)",
+          "map": "SushiCo Zen Galerija Beograd",
           "note": {
             "en": "Good enough, with some interesting flavours.",
             "sr": "Sasvim solidno, ima neke zanimljive ukuse."
@@ -225,6 +227,7 @@
   },
   {
     "id": "belgrade-burek",
+    "maps": "burek Beograd",
     "title": {
       "en": "Best burek in Belgrade",
       "sr": "Najbolji burek u Beogradu"

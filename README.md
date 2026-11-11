@@ -11,6 +11,7 @@ Nikola Kočović's personal website. Plain HTML and CSS, with no build step.
 | `sushi.js` | The sushi conveyor toy in the home page header (drag, throw, tap to hop, tap the belt for turbo) |
 | `blog/` | The blog (the Serbian blog pages live in `sr/blog/`) |
 | `blog/tierlists.json` | The tier lists shown in the Tier lists section of the blog |
+| `fonts/` | The two fonts (Inter and Newsreader), served from the site itself |
 | `handouts/` | Handout PDFs |
 | `projects/` | Project PDFs (e.g. the SYPT Ring Fountain presentation) |
 | `404.html` | The page shown for a link that doesn't exist |
@@ -70,6 +71,8 @@ in English and in Serbian (`blog/#tierlists`). Each list looks like this:
 - An item is just a name, or `{ "name", "link", "note" }` if you want it to link somewhere or show a note on hover.
 - `title`, `note` and an item's `name` can be plain text, or `{ "en": ..., "sr": ... }` when they differ by language.
 - `updated` and `note` are optional. A list with no items yet says "Coming soon".
+- `"maps": "restoran Beograd"` on a list adds a Google Maps link to every place: it searches for the name plus those words. Give an item its own `"map": "..."` to search for something else.
+- A place with a `"try"` (what to order) gets a blue dot; the legend under the title explains it.
 - To add another list, add another `{ ... }` block to the array, separated by a comma.
 - For a numbered list (1, 2, 3…) instead of tiers, use `"ranked": [ ... ]` in place of `"tiers"`, with items in order; each item's note is shown under its name.
 

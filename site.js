@@ -272,18 +272,42 @@
     );
   } catch (err) {}
 
-  // ---- page transition: whichever "Blog" link you click grows into the blog's heading ----
-  // (links that jump into the page, like the sushi's #tierlists, skip the morph)
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest && e.target.closest('a[href]');
-    if (!a) return;
-    var morphing = document.querySelectorAll('.vt-blog, [data-vt-blog]');
-    if (!morphing.length) return;
-    morphing.forEach(function (el) { el.style.viewTransitionName = 'none'; });
-    if (a.matches('.vt-blog, [data-vt-blog]') && a.getAttribute('href').indexOf('#') < 0) {
-      a.style.viewTransitionName = 'blog-title';
-    }
-  });
+  // ---- light/dark switch in the top nav ----
+  // Follows the device until you click; picking the device's own theme again goes back to following it.
+  var nav = document.querySelector('.top-nav');
+  if (nav) {
+    var srNav = root.lang.indexOf('sr') === 0;
+    var dark = window.matchMedia('(prefers-color-scheme: dark)');
+    var current = function () { return root.dataset.theme || (dark.matches ? 'dark' : 'light'); };
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'theme-toggle';
+    btn.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg>';
+    var label = function () {
+      var next = current() === 'dark' ? (srNav ? 'svetlu' : 'light') : (srNav ? 'tamnu' : 'dark');
+      btn.setAttribute('aria-label', srNav ? 'Prebaci na ' + next + ' temu' : 'Switch to ' + next + ' theme');
+      btn.title = btn.getAttribute('aria-label');
+    };
+    var apply = function (theme) {
+      if (theme === (dark.matches ? 'dark' : 'light')) {
+        delete root.dataset.theme;
+        try { localStorage.removeItem('theme'); } catch (err) {}
+      } else {
+        root.dataset.theme = theme;
+        try { localStorage.setItem('theme', theme); } catch (err) {}
+      }
+      label();
+    };
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      if (reduce || !document.startViewTransition) return apply(next);
+      root.classList.add('theme-switch');
+      var done = function () { root.classList.remove('theme-switch'); };
+      document.startViewTransition(function () { apply(next); }).finished.then(done, done);
+    });
+    label();
+    nav.appendChild(btn);
+  }
 
   // ---- latest blog posts on the home page ----
   var latest = document.getElementById('latest-posts');
