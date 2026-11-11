@@ -1860,6 +1860,49 @@ h1.site-name {
   background: var(--code-bg);
 }
 
+/* Desktop header: two columns. Name, intro line, links (and the equation caption) on the left;
+   on the right the portrait level with the name, and the sushi belt level with the links. */
+@media (min-width: 641px) {
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 48px;
+  }
+
+  .intro > * {
+    grid-column: 1;
+  }
+
+  .intro > .portrait {
+    position: static;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    justify-self: end;
+    align-self: start;
+  }
+
+  /* the links and the belt share the last row, whatever comes above them */
+  .intro > .links {
+    grid-row: 20;
+    align-self: center;
+  }
+
+  .intro > .sushi-toy {
+    position: relative;
+    grid-column: 2;
+    grid-row: 20;
+    justify-self: end;
+    align-self: center;
+    margin: 0;
+  }
+
+  /* the hint floats to the belt's left, so it never widens the column */
+  .intro > .sushi-toy .sushi-hint {
+    position: absolute;
+    right: calc(100% + 14px);
+  }
+}
+
 .portrait img {
   display: block;
   width: 100%;
@@ -1867,16 +1910,7 @@ h1.site-name {
   object-fit: cover;
 }
 
-/* the intro line keeps clear of the portrait */
-.portrait ~ .lede {
-  max-width: min(34em, 100% - 152px);
-}
-
 @media (max-width: 640px) {
-  .portrait ~ .lede {
-    max-width: 34em;
-  }
-
   /* phones: a smaller portrait, still to the right of the name */
   .portrait {
     top: 58px;
