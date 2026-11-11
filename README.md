@@ -17,6 +17,7 @@ Nikola Kočović's personal website. Plain HTML and CSS, with no build step.
 | `projects/` | Project PDFs (e.g. the SYPT Ring Fountain presentation) |
 | `404.html` | The page shown for a link that doesn't exist |
 | `og.png` | The picture shown when a link to the site is shared |
+| `sitemap.xml`, `robots.txt` | Tell search engines which pages exist |
 | `cv.pdf`, `cv-sr.pdf` | CV, English and Serbian |
 
 ## Writing a blog post
@@ -76,6 +77,13 @@ in English and in Serbian (`blog/#tierlists`). Each list looks like this:
 - A place with a `"try"` (what to order) gets a blue dot; the legend under the title explains it.
 - To add another list, add another `{ ... }` block to the array, separated by a comma.
 - For a numbered list (1, 2, 3…) instead of tiers, use `"ranked": [ ... ]` in place of `"tiers"`, with items in order; each item's note is shown under its name.
+
+## After changing `style.css` or a `.js` file
+
+Every page loads them with a version label, e.g. `style.css?v=20261112`. Phones (Safari especially)
+keep old copies for a while, so after editing either, change that label to today's date on **every
+page**: `index.html`, `sr/index.html`, `blog/index.html`, `blog/post.html`, `sr/blog/index.html`,
+`sr/blog/post.html` and `404.html`. A search-and-replace of the old label across the folder does it.
 
 ## Previewing locally
 

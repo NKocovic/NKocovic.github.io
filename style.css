@@ -827,25 +827,21 @@ a.tier-item.has-tip {
   color: var(--muted);
 }
 
-/* what the dot on a place means */
+/* what the dot on a place means: the end of the note line */
 .tier-legend {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 4px 0 0;
-  font-size: 0.8125rem;
-  color: var(--muted);
+  white-space: nowrap;
 }
 
 .tier-legend::before {
   content: "";
-  flex: none;
+  display: inline-block;
   width: 5px;
   height: 5px;
+  margin: 0 6px 2px 0;
   border-radius: 50%;
   background: var(--accent);
+  vertical-align: middle;
 }
-
 .tier-empty {
   color: var(--underline);
 }

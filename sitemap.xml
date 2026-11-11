@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://nkocovic.github.io/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nkocovic.github.io/"/>
+    <xhtml:link rel="alternate" hreflang="sr-Latn" href="https://nkocovic.github.io/sr/"/>
+  </url>
+  <url>
+    <loc>https://nkocovic.github.io/sr/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nkocovic.github.io/"/>
+    <xhtml:link rel="alternate" hreflang="sr-Latn" href="https://nkocovic.github.io/sr/"/>
+  </url>
+  <url>
+    <loc>https://nkocovic.github.io/blog/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nkocovic.github.io/blog/"/>
+    <xhtml:link rel="alternate" hreflang="sr-Latn" href="https://nkocovic.github.io/sr/blog/"/>
+  </url>
+  <url>
+    <loc>https://nkocovic.github.io/sr/blog/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nkocovic.github.io/blog/"/>
+    <xhtml:link rel="alternate" hreflang="sr-Latn" href="https://nkocovic.github.io/sr/blog/"/>
+  </url>
+</urlset>

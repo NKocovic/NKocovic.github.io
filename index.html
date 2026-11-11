@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nikola Kočović</title>
   <meta name="description" content="Nikola Kočović — student at Mathematical Grammar School, Belgrade. Physics, music and good food.">
-  <link rel="alternate" hreflang="sr-Latn" href="sr/">
+  <link rel="canonical" href="https://nkocovic.github.io/">
+  <link rel="alternate" hreflang="en" href="https://nkocovic.github.io/">
+  <link rel="alternate" hreflang="sr-Latn" href="https://nkocovic.github.io/sr/">
   <!-- link preview shown when the page is shared -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Nikola Kočović">
@@ -15,8 +17,10 @@
   <meta property="og:locale" content="en_GB">
   <meta property="og:image" content="https://nkocovic.github.io/og.png">
   <meta name="twitter:card" content="summary_large_image">
+  <!-- who this site is about, for search engines -->
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Person", "@id": "https://nkocovic.github.io/#me", "name": "Nikola Kočović", "url": "https://nkocovic.github.io/", "image": "https://nkocovic.github.io/images/nikola.jpg", "sameAs": ["https://github.com/NKocovic"], "affiliation": {"@type": "EducationalOrganization", "name": "Mathematical Grammar School", "address": {"@type": "PostalAddress", "addressLocality": "Belgrade", "addressCountry": "RS"}}, "award": "Silver medal, International Physics Olympiad 2026"}</script>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=20261111b">
+  <link rel="stylesheet" href="style.css?v=20261112">
   <script>
     // the theme picked with the light/dark switch, if any, before the first paint
     try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (err) {}
@@ -33,8 +37,8 @@
       if (e.viewTransition) e.viewTransition.ready.catch(function () {});
     });
   </script>
-  <script src="site.js?v=20261111b" defer></script>
-  <script src="sushi.js?v=20261111b" defer></script>
+  <script src="site.js?v=20261112" defer></script>
+  <script src="sushi.js?v=20261112" defer></script>
 </head>
 <body>
   <!-- English version. The Serbian one is sr/index.html: keep the two in step when you edit either. -->
@@ -107,8 +111,7 @@
     <section>
       <h2>About</h2>
       <div class="prose">
-        <p>I'm in my final year at Mathematical Grammar School in Belgrade, and I'm currently applying for undergraduate study.</p>
-        <p>Most of my time goes into physics: competitions, research, and writing handouts for other students. I also enjoy classical music and jazz, tennis, and much more.</p>
+        <p>I'm in my final year at Mathematical Grammar School in Belgrade. Most of my time goes into physics: competitions, research, and writing handouts for other students. I also enjoy classical music and jazz, tennis, and much more.</p>
       </div>
     </section>
 
@@ -122,60 +125,6 @@
           <a class="btn" href="blog/">Read the blog <span class="arrow" aria-hidden="true">→</span></a>
           <a href="blog/#tierlists">Tier lists <span class="arrow" aria-hidden="true">→</span></a>
         </p>
-      </div>
-    </section>
-
-    <!-- ===== Experience: entries inside .more are hidden until "Show more" is clicked ===== -->
-    <section>
-      <h2>Experience</h2>
-      <div>
-        <ul class="entries">
-          <li>
-            <div class="entry-head">
-              <span class="entry-title">Problem writer, AIPhO</span>
-              <span class="meta">Nov 2026–now</span>
-            </div>
-            <p>Writing physics problems for a benchmark that tests future AI models.</p>
-          </li>
-          <li>
-            <div class="entry-head">
-              <span class="entry-title">Research intern, AriesAI</span>
-              <span class="meta">Oct 2026–now</span>
-            </div>
-            <p>Serbian speech recognition: identifying and cleaning Serbian speech datasets, testing Whisper models on them, and building a metric for judging transcript quality.</p>
-          </li>
-        </ul>
-        <div class="more" id="more-experience">
-          <div class="more-inner">
-            <ul class="entries">
-              <li>
-                <div class="entry-head">
-                  <span class="entry-title">Olympiad classes, Mathematical Grammar School</span>
-                  <span class="meta">2026–now</span>
-                </div>
-                <p>Holding extra physics classes (dodatna nastava) at school for students preparing for olympiads.</p>
-              </li>
-              <li>
-                <div class="entry-head">
-                  <span class="entry-title">Tutor</span>
-                  <span class="meta">Mar 2024–now</span>
-                </div>
-                <p>Physics and mathematics lessons for advanced students.</p>
-              </li>
-              <li>
-                <div class="entry-head">
-                  <a class="entry-title" href="https://akronolo.rs">Akronolo</a>
-                  <span class="meta">Aug 2023–now</span>
-                </div>
-                <p>Built the company website from scratch and maintain it.</p>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <button class="more-toggle" type="button" aria-expanded="false" aria-controls="more-experience" data-more="Show more" data-less="Show less">
-          <span class="more-label">Show more</span>
-          <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
       </div>
     </section>
 
@@ -257,6 +206,60 @@
         </div>
         <button class="more-toggle" type="button" aria-expanded="false" aria-controls="more-competitions" data-more="Show all competitions" data-less="Show less">
           <span class="more-label">Show all competitions</span>
+          <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===== Experience: entries inside .more are hidden until "Show more" is clicked ===== -->
+    <section>
+      <h2>Experience</h2>
+      <div>
+        <ul class="entries">
+          <li>
+            <div class="entry-head">
+              <span class="entry-title">Problem writer, AIPhO</span>
+              <span class="meta">Nov 2026–now</span>
+            </div>
+            <p>Writing physics problems for a benchmark that tests future AI models.</p>
+          </li>
+          <li>
+            <div class="entry-head">
+              <span class="entry-title">Research intern, AriesAI</span>
+              <span class="meta">Oct 2026–now</span>
+            </div>
+            <p>Serbian speech recognition: identifying and cleaning Serbian speech datasets, testing Whisper models on them, and building a metric for judging transcript quality.</p>
+          </li>
+        </ul>
+        <div class="more" id="more-experience">
+          <div class="more-inner">
+            <ul class="entries">
+              <li>
+                <div class="entry-head">
+                  <span class="entry-title">Olympiad classes, Mathematical Grammar School</span>
+                  <span class="meta">2026–now</span>
+                </div>
+                <p>Holding extra physics classes (dodatna nastava) at school for students preparing for olympiads.</p>
+              </li>
+              <li>
+                <div class="entry-head">
+                  <span class="entry-title">Tutor</span>
+                  <span class="meta">Mar 2024–now</span>
+                </div>
+                <p>Physics and mathematics lessons for advanced students.</p>
+              </li>
+              <li>
+                <div class="entry-head">
+                  <a class="entry-title" href="https://akronolo.rs">Akronolo</a>
+                  <span class="meta">Aug 2023–now</span>
+                </div>
+                <p>Built the company website from scratch and maintain it.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <button class="more-toggle" type="button" aria-expanded="false" aria-controls="more-experience" data-more="Show more" data-less="Show less">
+          <span class="more-label">Show more</span>
           <svg class="chev" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>

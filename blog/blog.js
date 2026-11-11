@@ -8,8 +8,8 @@
     ? { empty: 'Još nema objava. Uskoro.', missing: 'Ova objava ne postoji.', failed: 'Objava trenutno ne može da se učita.' }
     : { empty: 'No posts yet. Check back soon.', missing: 'This post doesn’t exist.', failed: 'This couldn’t be loaded right now.' };
   var tierText = sr
-    ? { soon: 'Uskoro.', none: 'Još nema lista.', updated: 'ažurirano', tryLabel: 'Probaj', map: 'Mapa', legend: 'Tačka označava mesta sa jelom koje preporučujem.' }
-    : { soon: 'Coming soon.', none: 'No lists yet.', updated: 'updated', tryLabel: 'Try', map: 'Map', legend: 'A dot marks places with a dish I recommend.' };
+    ? { soon: 'Uskoro.', none: 'Još nema lista.', updated: 'ažurirano', tryLabel: 'Probaj', map: 'Mapa', legend: 'označava mesto sa jelom koje preporučujem.' }
+    : { soon: 'Coming soon.', none: 'No lists yet.', updated: 'updated', tryLabel: 'Try', map: 'Map', legend: 'marks a place with a dish I recommend.' };
   var dateFmt = new Intl.DateTimeFormat(sr ? 'sr-Latn' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
   function formatDate(iso) {
@@ -234,8 +234,17 @@
           });
 
           var note = tr(list.note) || (total ? '' : tierText.soon);
-          if (note) art.appendChild(make('p', 'tierlist-note', note));
-          if (board.querySelector('.has-try')) art.appendChild(make('p', 'tier-legend', tierText.legend));
+          // one quiet line under the title: the list's note, then what the dot means
+          var hasDot = !!board.querySelector('.has-try');
+          if (note || hasDot) {
+            var noteEl = make('p', 'tierlist-note', note);
+            if (hasDot) {
+              var lg = make('span', 'tier-legend', tierText.legend);
+              if (note) noteEl.appendChild(document.createTextNode(' '));
+              noteEl.appendChild(lg);
+            }
+            art.appendChild(noteEl);
+          }
           art.appendChild(board);
           tierBox.appendChild(art);
         });
