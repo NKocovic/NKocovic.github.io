@@ -1881,12 +1881,12 @@ h1.site-name {
     max-width: 34em;
   }
 
+  /* phones: a smaller portrait, still to the right of the name */
   .portrait {
-    position: static;
-    display: block;
-    width: 72px;
-    height: 72px;
-    margin: 0 0 20px;
+    top: 58px;
+    right: 16px;
+    width: 64px;
+    height: 64px;
   }
 
   .page {
@@ -2000,4 +2000,12 @@ html.theme-switch::view-transition-old(root) {
 
 html.theme-switch::view-transition-new(root) {
   animation: vt-fade-in 0.4s ease both;
+}
+
+@media (max-width: 349px) {
+  .portrait {
+    position: static;
+    display: block;
+    margin: 0 0 16px;
+  }
 }
