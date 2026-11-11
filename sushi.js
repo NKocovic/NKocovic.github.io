@@ -75,6 +75,16 @@
     }
   }
 
+  // give a flying copy of a letter the heading's font. Property by property: the computed
+  // `font` shorthand comes back empty whenever a property it cannot express is set
+  // (font-kerning, for one), which would leave the copies in the small body font.
+  function copyFont(c, cs) {
+    ['fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'fontStretch', 'letterSpacing',
+     'fontOpticalSizing', 'fontVariationSettings', 'fontFeatureSettings', 'fontKerning'].forEach(function (k) {
+      c.style[k] = cs[k];
+    });
+  }
+
   function el(tag, cls, txt) {
     var e = document.createElement(tag);
     if (cls) e.className = cls;
@@ -120,7 +130,7 @@
       c.style.width = r.width + 'px';
       c.style.height = r.height + 'px';
       c.style.lineHeight = r.height + 'px';
-      c.style.font = cs.font;
+      copyFont(c, cs);
       c.style.color = getComputedStyle(l).color;
       layer.appendChild(c);
       return { el: c, cx: r.left + r.width / 2, cy: r.top + r.height / 2, gulps: [] };
@@ -412,7 +422,7 @@
         c.style.width = r.width + 'px';
         c.style.height = r.height + 'px';
         c.style.lineHeight = r.height + 'px';
-        c.style.font = cs.font;
+        copyFont(c, cs);
         layer.appendChild(c);
         return c;
       };

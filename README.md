@@ -12,6 +12,7 @@ Nikola Kočović's personal website. Plain HTML and CSS, with no build step.
 | `blog/` | The blog (the Serbian blog pages live in `sr/blog/`) |
 | `blog/tierlists.json` | The tier lists shown in the Tier lists section of the blog |
 | `fonts/` | The two fonts (Inter and Newsreader), served from the site itself |
+| `images/nikola.jpg` | The portrait on the home page |
 | `handouts/` | Handout PDFs |
 | `projects/` | Project PDFs (e.g. the SYPT Ring Fountain presentation) |
 | `404.html` | The page shown for a link that doesn't exist |
