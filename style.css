@@ -1882,7 +1882,7 @@ h1.site-name {
   }
 
   .portrait {
-    position: relative;
+    position: static;
     display: block;
     width: 72px;
     height: 72px;
