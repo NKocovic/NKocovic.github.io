@@ -37,6 +37,14 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  color-scheme: light dark;
+  scroll-padding-top: 32px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
@@ -47,6 +55,9 @@ body {
   font-size: 16px;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
 }
 
 a {
@@ -55,12 +66,11 @@ a {
   text-decoration-color: var(--underline);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
-  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+  transition: color 0.3s ease, text-decoration-color 0.3s ease;
 }
 
 a:hover,
 a:focus-visible {
-  color: var(--accent);
   text-decoration-color: currentColor;
 }
 
@@ -105,10 +115,6 @@ h1 {
   line-height: 1.05;
   letter-spacing: -0.02em;
   margin: 0 0 16px;
-}
-
-.site-name {
-  view-transition-name: site-name;
 }
 
 .lede {
@@ -182,7 +188,6 @@ h1 {
   font-size: 1.125rem;
   font-weight: 500;
   text-decoration: none;
-  view-transition-name: site-name;
 }
 
 section {
@@ -1634,7 +1639,7 @@ a.tier-item.has-tip {
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -1664,7 +1669,7 @@ a.tier-item.has-tip {
 .js main > article:not(.is-in),
 .js .footer:not(.is-in) {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(6px);
 }
 
 .js .instant {
@@ -1676,66 +1681,35 @@ a.tier-item.has-tip {
   animation: none;
 }
 
-/* smooth cross-fade between pages; the name glides between its big and small spots */
+/* moving between pages: the old page fades out, then the new one fades in; the top nav stays put */
 @view-transition {
   navigation: auto;
 }
 
-::view-transition-old(root),
+::view-transition-old(root) {
+  animation: vt-fade-out 0.18s ease both;
+}
+
 ::view-transition-new(root) {
-  animation-duration: 0.35s;
+  animation: vt-fade-in 0.45s ease 0.12s both;
+}
+
+::view-transition-group(top-nav) {
+  animation-duration: 0.3s;
   animation-timing-function: var(--ease-in-out);
 }
 
-::view-transition-group(site-name),
-::view-transition-group(blog-title) {
-  animation-duration: 0.6s;
-  animation-timing-function: var(--ease-out);
+@keyframes vt-fade-out {
+  to { opacity: 0; }
 }
 
-/* the Blog pill (or button) on the home page grows into the blog's big heading */
-.vt-blog {
-  view-transition-name: blog-title;
+@keyframes vt-fade-in {
+  from { opacity: 0; }
 }
 
-/* morphing headings hug their text, so they scale from and to the words, not the full page width */
-h1.vt-blog,
+/* the name hugs its text (the letter toy measures it) */
 h1.site-name {
   width: fit-content;
-}
-
-/* into the blog the page slides forward, out of it back; switching language just cross-fades
-   (the direction is worked out in each page's head script) */
-html:active-view-transition-type(forward)::view-transition-old(root) {
-  animation: vt-out-left 0.3s ease both;
-}
-
-html:active-view-transition-type(forward)::view-transition-new(root) {
-  animation: vt-in-right 0.55s var(--ease-out) both;
-}
-
-html:active-view-transition-type(back)::view-transition-old(root) {
-  animation: vt-out-right 0.3s ease both;
-}
-
-html:active-view-transition-type(back)::view-transition-new(root) {
-  animation: vt-in-left 0.55s var(--ease-out) both;
-}
-
-@keyframes vt-out-left {
-  to { opacity: 0; transform: translateX(-14px); }
-}
-
-@keyframes vt-in-right {
-  from { opacity: 0; transform: translateX(14px); }
-}
-
-@keyframes vt-out-right {
-  to { opacity: 0; transform: translateX(14px); }
-}
-
-@keyframes vt-in-left {
-  from { opacity: 0; transform: translateX(-14px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1832,4 +1806,12 @@ html:active-view-transition-type(back)::view-transition-new(root) {
   letter-spacing: 0.06em;
   color: var(--muted);
   margin: 0 0 12px;
+}
+
+.home-link {
+  transition: opacity 0.3s ease;
+}
+
+.home-link:hover {
+  opacity: 0.65;
 }
