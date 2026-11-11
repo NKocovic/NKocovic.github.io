@@ -1,6 +1,6 @@
 Podrum Radovanović has received its reviews from James Suckling, and they are excellent.
 
-![Mija Radovanović at the tasting](/blog/images/mija-radovanovic-tasting.jpg)
+![Mija Radovanović at the tasting](/blog/images/mija-radovanovic-tasting.jpg "With Mija Radovanović")
 
 Mija Radovanović himself is still working, caring for his wines and experimenting with new ideas, especially with rosé. Truly one of the greats of Serbian winemaking.
 

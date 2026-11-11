@@ -64,6 +64,21 @@ a:focus-visible {
   text-decoration-color: currentColor;
 }
 
+::selection {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--accent);
@@ -389,6 +404,33 @@ h2 {
   border-radius: 6px;
 }
 
+/* a photo with a caption: ![alt](photo.jpg "Caption") */
+.post figure {
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.post figure img {
+  margin: 0 auto;
+}
+
+.post figcaption {
+  margin-top: 10px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* photos fade in once loaded */
+.js .post img {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.js .post img.is-loaded {
+  opacity: 1;
+}
+
 .post blockquote {
   margin-left: 0;
   padding-left: 1em;
@@ -604,7 +646,7 @@ h2 {
 a.tier-item:hover,
 a.tier-item:focus-visible {
   border-color: currentColor;
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 /* a place's bubble: my take, then what to order ("Try"), shown on hover, focus or tap */
@@ -1592,7 +1634,7 @@ a.tier-item.has-tip {
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -1614,7 +1656,7 @@ a.tier-item.has-tip {
 .js main > section,
 .js main > article,
 .js .footer {
-  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+  transition: opacity 0.9s ease, transform 0.9s var(--ease-out);
   transition-delay: var(--delay, 0ms);
 }
 
@@ -1622,7 +1664,7 @@ a.tier-item.has-tip {
 .js main > article:not(.is-in),
 .js .footer:not(.is-in) {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(10px);
 }
 
 .js .instant {
@@ -1665,35 +1707,35 @@ h1.site-name {
 /* into the blog the page slides forward, out of it back; switching language just cross-fades
    (the direction is worked out in each page's head script) */
 html:active-view-transition-type(forward)::view-transition-old(root) {
-  animation: vt-out-left 0.42s var(--ease-in-out) both;
+  animation: vt-out-left 0.3s ease both;
 }
 
 html:active-view-transition-type(forward)::view-transition-new(root) {
-  animation: vt-in-right 0.65s var(--ease-out) both;
+  animation: vt-in-right 0.55s var(--ease-out) both;
 }
 
 html:active-view-transition-type(back)::view-transition-old(root) {
-  animation: vt-out-right 0.42s var(--ease-in-out) both;
+  animation: vt-out-right 0.3s ease both;
 }
 
 html:active-view-transition-type(back)::view-transition-new(root) {
-  animation: vt-in-left 0.65s var(--ease-out) both;
+  animation: vt-in-left 0.55s var(--ease-out) both;
 }
 
 @keyframes vt-out-left {
-  to { opacity: 0; transform: translateX(-56px); filter: blur(4px); }
+  to { opacity: 0; transform: translateX(-14px); }
 }
 
 @keyframes vt-in-right {
-  from { opacity: 0; transform: translateX(56px); filter: blur(4px); }
+  from { opacity: 0; transform: translateX(14px); }
 }
 
 @keyframes vt-out-right {
-  to { opacity: 0; transform: translateX(56px); filter: blur(4px); }
+  to { opacity: 0; transform: translateX(14px); }
 }
 
 @keyframes vt-in-left {
-  from { opacity: 0; transform: translateX(-56px); filter: blur(4px); }
+  from { opacity: 0; transform: translateX(-14px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1778,4 +1820,16 @@ html:active-view-transition-type(back)::view-transition-new(root) {
   .post {
     padding-top: 32px;
   }
+}
+
+/* ---------- 404 page ---------- */
+.lost {
+  min-height: 50vh;
+}
+
+.lost .code {
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0 0 12px;
 }

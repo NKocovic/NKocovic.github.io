@@ -13,6 +13,8 @@ Nikola Kočović's personal website. Plain HTML and CSS, with no build step.
 | `blog/tierlists.json` | The tier lists shown in the Tier lists section of the blog |
 | `handouts/` | Handout PDFs |
 | `projects/` | Project PDFs (e.g. the SYPT Ring Fountain presentation) |
+| `404.html` | The page shown for a link that doesn't exist |
+| `og.png` | The picture shown when a link to the site is shared |
 | `cv.pdf`, `cv-sr.pdf` | CV, English and Serbian |
 
 ## Writing a blog post
@@ -37,6 +39,9 @@ Nikola Kočović's personal website. Plain HTML and CSS, with no build step.
    post, with a small EN or SR tag on posts written in the other language.
 3. Maths works: `$E = mc^2$` inline, and `$$ ... $$` on its own lines for a displayed equation.
    Write `\$` for a literal dollar sign.
+
+4. Photos: put the file in `blog/images/` and write `![Description](/blog/images/photo.jpg "Caption")`.
+   The caption in quotes is optional and appears under the photo.
 
 Don't put the title at the top of the Markdown file: it comes from `posts.json`.
 

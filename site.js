@@ -34,7 +34,7 @@
       var n = 0;
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
-        e.target.style.setProperty('--delay', 120 + n++ * 90 + 'ms');
+        e.target.style.setProperty('--delay', 60 + n++ * 70 + 'ms');
         e.target.classList.add('is-in');
         io.unobserve(e.target);
       });

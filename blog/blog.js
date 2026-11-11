@@ -239,6 +239,20 @@
         .replace(/(^|[^\\$])\$(?!\s)([^$\n]+?)(?<!\s)\$/g, function (_, pre, tex) { return pre + stash(tex, false); });
     }
     body.innerHTML = marked.parse(parts.join(''));
+    // photos: fade in once loaded; ![alt](photo.jpg "Caption") gets its caption underneath
+    body.querySelectorAll('img').forEach(function (img) {
+      var shown = function () { img.classList.add('is-loaded'); };
+      if (img.complete) shown(); else { img.addEventListener('load', shown); img.addEventListener('error', shown); }
+      if (!img.title) return;
+      var fig = document.createElement('figure');
+      var cap = document.createElement('figcaption');
+      cap.textContent = img.title;
+      img.removeAttribute('title');
+      var p = img.parentNode;
+      var alone = p.tagName === 'P' && p.childNodes.length === 1;
+      (alone ? p : img).replaceWith(fig);
+      fig.append(img, cap);
+    });
     if (!math.length) return;
 
     var cdn = 'https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/';
