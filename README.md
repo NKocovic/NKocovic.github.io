@@ -80,7 +80,7 @@ in English and in Serbian (`blog/#tierlists`). Each list looks like this:
 
 ## After changing `style.css` or a `.js` file
 
-Every page loads them with a version label, e.g. `style.css?v=20261112b`. Phones (Safari especially)
+Every page loads them with a version label, e.g. `style.css?v=20261112c`. Phones (Safari especially)
 keep old copies for a while, so after editing either, change that label to today's date on **every
 page**: `index.html`, `sr/index.html`, `blog/index.html`, `blog/post.html`, `sr/blog/index.html`,
 `sr/blog/post.html` and `404.html`. A search-and-replace of the old label across the folder does it.
