@@ -1,16 +1,16 @@
 [
   {
     "id": "belgrade-restaurants",
-    "maps": "restoran Beograd",
+    "label": {
+      "en": "Restaurants",
+      "sr": "Restorani"
+    },
     "title": {
       "en": "Best restaurants in Belgrade",
       "sr": "Najbolji restorani u Beogradu"
     },
     "updated": "2026-11-10",
-    "note": {
-      "en": "Hover over or tap a place for my take, what to order and a map.",
-      "sr": "Pređi mišem preko mesta ili ga dodirni za moj komentar, šta da naručiš i mapu."
-    },
+    "maps": "restoran Beograd",
     "tiers": {
       "S": [
         {
@@ -227,12 +227,16 @@
   },
   {
     "id": "belgrade-burek",
-    "maps": "burek Beograd",
+    "label": {
+      "en": "Burek",
+      "sr": "Burek"
+    },
     "title": {
       "en": "Best burek in Belgrade",
       "sr": "Najbolji burek u Beogradu"
     },
     "updated": "2026-11-10",
+    "maps": "burek Beograd",
     "ranked": [
       {
         "name": "Kirćanski",

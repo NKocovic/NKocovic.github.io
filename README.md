@@ -50,37 +50,41 @@ Don't put the title at the top of the Markdown file: it comes from `posts.json`.
 
 ## Editing a tier list
 
-All tier lists live in `blog/tierlists.json`. They appear in the Tier lists section of the blog page,
-in English and in Serbian (`blog/#tierlists`). Each list looks like this:
+All tier lists live in `blog/tierlists.json`. Each list gets its own section on the blog page, in
+English and in Serbian (the first one is at `blog/#tierlists`). A list looks like this:
 
 ```json
 {
   "id": "belgrade-restaurants",
+  "label": { "en": "Restaurants", "sr": "Restorani" },
   "title": { "en": "Best restaurants in Belgrade", "sr": "Najbolji restorani u Beogradu" },
   "updated": "2026-11-10",
-  "note": { "en": "Optional line under the title.", "sr": "Opciona rečenica ispod naslova." },
+  "maps": "restoran Beograd",
   "tiers": {
-    "S": ["Restaurant name", { "name": "Another one", "link": "https://...", "note": "Shown on hover" }],
+    "S": [
+      "Just a name",
+      { "name": "Another one", "note": "My take.", "try": "What to order.", "link": "https://..." }
+    ],
     "A": [],
-    "B": [],
-    "C": [],
-    "D": []
+    "B": []
   }
 }
 ```
 
+- `label` is the small word in the left column; `title` is the line above the places.
 - Tiers are drawn in the order S, A, B, C, D, E, F; leave out the ones you don't need.
-- An item is just a name, or `{ "name", "link", "note" }` if you want it to link somewhere or show a note on hover.
-- `title`, `note` and an item's `name` can be plain text, or `{ "en": ..., "sr": ... }` when they differ by language.
-- `updated` and `note` are optional. A list with no items yet says "Coming soon".
-- `"maps": "restoran Beograd"` on a list adds a Google Maps link to every place: it searches for the name plus those words. Give an item its own `"map": "..."` to search for something else.
-- A place with a `"try"` (what to order) gets a blue dot; the legend under the title explains it.
+- An item is just a name, or `{ "name", "note", "try", "link" }`: `note` is shown under the name,
+  `try` as a "Try" line, and `link` makes the name a link.
+- Any text can be plain, or `{ "en": ..., "sr": ... }` when it differs by language.
+- `updated` and `note` (a line under the title) are optional.
+- `"maps": "restoran Beograd"` adds a "Map ↗" link to every place: it searches Google Maps for the
+  name plus those words. Give an item its own `"map": "..."` to search for something else.
+- For a numbered list (1, 2, 3…) use `"ranked": [ ... ]` in place of `"tiers"`, items in order.
 - To add another list, add another `{ ... }` block to the array, separated by a comma.
-- For a numbered list (1, 2, 3…) instead of tiers, use `"ranked": [ ... ]` in place of `"tiers"`, with items in order; each item's note is shown under its name.
 
 ## After changing `style.css` or a `.js` file
 
-Every page loads them with a version label, e.g. `style.css?v=20261112c`. Phones (Safari especially)
+Every page loads them with a version label, e.g. `style.css?v=20261112d`. Phones (Safari especially)
 keep old copies for a while, so after editing either, change that label to today's date on **every
 page**: `index.html`, `sr/index.html`, `blog/index.html`, `blog/post.html`, `sr/blog/index.html`,
 `sr/blog/post.html` and `404.html`. A search-and-replace of the old label across the folder does it.

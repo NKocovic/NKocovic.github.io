@@ -1,5 +1,5 @@
 // Blog: lists the posts in posts.json, renders a single post from Markdown,
-// and draws the tier lists in tierlists.json on the blog page.
+// and draws the tier lists in tierlists.json on the blog page, one section per list.
 // To add a post or edit a tier list, see README.md in the site folder.
 (function () {
   var sr = document.documentElement.lang.indexOf('sr') === 0;
@@ -8,8 +8,8 @@
     ? { empty: 'Još nema objava. Uskoro.', missing: 'Ova objava ne postoji.', failed: 'Objava trenutno ne može da se učita.' }
     : { empty: 'No posts yet. Check back soon.', missing: 'This post doesn’t exist.', failed: 'This couldn’t be loaded right now.' };
   var tierText = sr
-    ? { soon: 'Uskoro.', none: 'Još nema lista.', updated: 'ažurirano', tryLabel: 'Probaj', map: 'Mapa', legend: 'označava mesto sa jelom koje preporučujem.' }
-    : { soon: 'Coming soon.', none: 'No lists yet.', updated: 'updated', tryLabel: 'Try', map: 'Map', legend: 'marks a place with a dish I recommend.' };
+    ? { updated: 'ažurirano', tryLabel: 'Probaj', map: 'Mapa' }
+    : { updated: 'updated', tryLabel: 'Try', map: 'Map' };
   var dateFmt = new Intl.DateTimeFormat(sr ? 'sr-Latn' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
   function formatDate(iso) {
@@ -30,8 +30,8 @@
   if (list) {
     loadIndex().then(function (posts) {
       if (!posts.length) {
-        empty.textContent = text.empty;
-        empty.hidden = false;
+        // no posts yet: leave the section out rather than show an empty one
+        list.closest('section').hidden = true;
         return;
       }
       posts.forEach(function (p, i) {
@@ -109,9 +109,12 @@
     }
   }
 
-  // ---- tier lists (blog/index.html, the "Tier lists" section) ----
-  var tierBox = document.getElementById('tierlists-box');
-  if (tierBox) {
+  // ---- tier lists (blog/index.html): one section per list, in the style of the home page ----
+  // Each list gets its own section (label on the left), then its places grouped by tier, the tier
+  // letter (or the rank, for a numbered list) set large in the margin. Every place shows my note,
+  // what to try and a map link, so nothing hides behind a hover.
+  var anchor = document.getElementById('tierlists');
+  if (anchor) {
     var lang = sr ? 'sr' : 'en';
     var ORDER = ['S', 'A', 'B', 'C', 'D', 'E', 'F'];
     // a value may be plain text, or { "en": "...", "sr": "..." }
@@ -125,131 +128,91 @@
       if (txt != null) el.textContent = txt;
       return el;
     };
-
-    // a list with "maps": "restoran Beograd" gets a Google Maps link per place: it searches for
-    // the name (without any bracketed part) plus those words; an item's own "map" replaces the search
-    var mapLink = function (list, item, cls) {
-      if (!list.maps && !item.map) return null;
+    // "maps": "restoran Beograd" on a list adds a Google Maps search for each place: its name
+    // (without any bracketed part) plus those words; an item's own "map" replaces the search
+    var mapLink = function (list, item) {
+      if (item.link || (!list.maps && !item.map)) return null;
       var q = item.map || (tr(item.name).replace(/\s*\(.*?\)/g, '') + ' ' + list.maps);
-      var a = make('a', cls, tierText.map + ' ↗');
+      var a = make('a', 'meta place-map', tierText.map + ' ↗');
       a.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
       a.target = '_blank';
       a.rel = 'noopener';
       return a;
     };
+    var place = function (list, item) {
+      if (typeof item === 'string') item = { name: item };
+      var li = make('li', 'place');
+      var head = make('div', 'entry-head');
+      var name = make(item.link ? 'a' : 'span', 'entry-title', tr(item.name));
+      if (item.link) name.href = item.link;
+      head.appendChild(name);
+      var map = mapLink(list, item);
+      if (map) head.appendChild(map);
+      li.appendChild(head);
+      if (item.note) li.appendChild(make('p', null, tr(item.note)));
+      if (item.try) {
+        var t = make('p', 'place-try');
+        t.appendChild(make('span', 'place-try-label', tierText.tryLabel));
+        t.appendChild(document.createTextNode(tr(item.try)));
+        li.appendChild(t);
+      }
+      return li;
+    };
+    var group = function (mark, items, list, rank) {
+      var g = make('div', 'tier-group');
+      g.dataset.tier = mark;
+      g.appendChild(make('span', 'tier-mark' + (rank ? ' is-rank' : ''), mark));
+      var ul = make('ul', 'entries places');
+      items.forEach(function (item) { ul.appendChild(place(list, item)); });
+      if (!items.length) ul.appendChild(make('li', 'place-empty', '—'));
+      g.appendChild(ul);
+      return g;
+    };
 
+    var main = anchor.parentNode;
+    var footer = main.querySelector('.footer');
     fetch(base + 'tierlists.json', { cache: 'no-cache' })
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (lists) {
-        if (!lists.length) {
-          tierBox.appendChild(make('p', 'empty', tierText.none));
-          return;
-        }
         lists.forEach(function (list) {
-          var art = make('article', 'tierlist');
-          if (list.id) art.id = list.id;
-
-          var head = make('div', 'tierlist-head');
+          var sec = make('section', 'tierlist');
+          if (list.id) sec.id = list.id;
+          sec.appendChild(make('h2', null, tr(list.label) || tr(list.title)));
+          var body = make('div', 'tierlist-body');
+          var head = make('div', 'entry-head tierlist-head');
           head.appendChild(make('h3', null, tr(list.title)));
           if (list.updated) {
-            var t = make('time', 'meta', tierText.updated + ' ' + formatDate(list.updated));
-            t.dateTime = list.updated;
-            head.appendChild(t);
+            var time = make('time', 'meta', tierText.updated + ' ' + formatDate(list.updated));
+            time.dateTime = list.updated;
+            head.appendChild(time);
           }
-          art.appendChild(head);
-
-          // a numbered list ("ranked": [...]) instead of tiers: 1, 2, 3... with the note shown
+          body.appendChild(head);
+          if (list.note) body.appendChild(make('p', 'tierlist-note', tr(list.note)));
           if (list.ranked) {
-            if (list.note) art.appendChild(make('p', 'tierlist-note', tr(list.note)));
-            var ol = make('ol', 'ranked');
-            list.ranked.forEach(function (item, i) {
-              if (typeof item === 'string') item = { name: item };
-              var li = make('li', 'rank');
-              li.style.setProperty('--i', i);
-              li.appendChild(make('span', 'rank-n', String(i + 1)));
-              var body = make('div', 'rank-body');
-              var name = make(item.link ? 'a' : 'span', 'rank-name', tr(item.name));
-              if (item.link) name.href = item.link;
-              var rm = item.link ? null : mapLink(list, item, 'rank-map');
-              if (rm) {
-                var head = make('span', 'rank-head');
-                head.append(name, rm);
-                body.appendChild(head);
-              } else body.appendChild(name);
-              if (item.note) body.appendChild(make('span', 'rank-note', tr(item.note)));
-              li.appendChild(body);
-              ol.appendChild(li);
-            });
-            art.appendChild(ol);
-            tierBox.appendChild(art);
-            return;
+            list.ranked.forEach(function (item, i) { body.appendChild(group(String(i + 1), [item], list, true)); });
+          } else {
+            var tiers = list.tiers || {};
+            ORDER.filter(function (k) { return k in tiers; })
+              .concat(Object.keys(tiers).filter(function (k) { return ORDER.indexOf(k) < 0; }))
+              .forEach(function (k) { body.appendChild(group(k, tiers[k] || [], list, false)); });
           }
-
-          var tiers = list.tiers || {};
-          var keys = ORDER.filter(function (k) { return k in tiers; })
-            .concat(Object.keys(tiers).filter(function (k) { return ORDER.indexOf(k) < 0; }));
-          var total = 0;
-          var board = make('div', 'tiers');
-          keys.forEach(function (k, i) {
-            var row = make('div', 'tier');
-            row.dataset.tier = k;
-            row.style.setProperty('--i', i);
-            row.appendChild(make('div', 'tier-label', k));
-            var ul = make('ul', 'tier-items');
-            (tiers[k] || []).forEach(function (item) {
-              if (typeof item === 'string') item = { name: item };
-              var li = make('li');
-              var chip = make(item.link ? 'a' : 'span', 'tier-item', tr(item.name));
-              if (item.link) chip.href = item.link;
-              var tm = item.link ? null : mapLink(list, item, 'tip-map');
-              if (item.note || item.try || tm) {
-                // a bubble with my take and what to order, shown on hover, keyboard focus or tap
-                chip.classList.add('has-tip');
-                if (item.try) chip.classList.add('has-try');
-                var tip = make('span', 'tip');
-                if (item.note) tip.appendChild(make('span', 'tip-note', tr(item.note)));
-                if (item.try) {
-                  var t = make('span', 'tip-try');
-                  t.appendChild(make('b', null, tierText.tryLabel));
-                  t.appendChild(document.createTextNode(' ' + tr(item.try)));
-                  tip.appendChild(t);
-                }
-                if (tm) tip.appendChild(tm);
-                chip.appendChild(tip);
-                if (!item.link) chip.tabIndex = 0;
-                var side = function () {
-                  var r = chip.getBoundingClientRect();
-                  chip.classList.toggle('tip-right', r.left + r.width / 2 > window.innerWidth / 2);
-                };
-                chip.addEventListener('pointerenter', side);
-                chip.addEventListener('focus', side);
-              }
-              li.appendChild(chip);
-              ul.appendChild(li);
-              total++;
-            });
-            if (!ul.children.length) ul.appendChild(make('li', 'tier-empty', '—'));
-            row.appendChild(ul);
-            board.appendChild(row);
-          });
-
-          var note = tr(list.note) || (total ? '' : tierText.soon);
-          // one quiet line under the title: the list's note, then what the dot means
-          var hasDot = !!board.querySelector('.has-try');
-          if (note || hasDot) {
-            var noteEl = make('p', 'tierlist-note', note);
-            if (hasDot) {
-              var lg = make('span', 'tier-legend', tierText.legend);
-              if (note) noteEl.appendChild(document.createTextNode(' '));
-              noteEl.appendChild(lg);
-            }
-            art.appendChild(noteEl);
-          }
-          art.appendChild(board);
-          tierBox.appendChild(art);
+          sec.appendChild(body);
+          main.insertBefore(sec, footer);
+          // fade in like the other sections (reading its size first lets the fade start from hidden)
+          void sec.offsetWidth;
+          sec.classList.add('is-in');
         });
+        // the page loaded before the lists existed: if it was opened at one, go there now
+        var target = location.hash && document.getElementById(location.hash.slice(1));
+        if (target) target.scrollIntoView({ behavior: 'instant', block: 'start' });
       })
-      .catch(function () { tierBox.appendChild(make('p', 'empty', text.failed)); });
+      .catch(function () {
+        var sec = make('section');
+        sec.appendChild(make('h2', null, sr ? 'Liste' : 'Lists'));
+        sec.appendChild(make('p', 'empty', text.failed));
+        sec.classList.add('is-in');
+        main.insertBefore(sec, footer);
+      });
   }
 
   // Markdown -> HTML, with $...$ and $$...$$ math set by KaTeX.

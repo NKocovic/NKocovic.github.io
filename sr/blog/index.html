@@ -19,7 +19,7 @@
   <meta property="og:image" content="https://nkocovic.github.io/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../../style.css?v=20261112c">
+  <link rel="stylesheet" href="../../style.css?v=20261112d">
   <script>
     // the theme picked with the light/dark switch, if any, before the first paint
     try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (err) {}
@@ -35,8 +35,8 @@
       if (e.viewTransition) e.viewTransition.ready.catch(function () {});
     });
   </script>
-  <script src="../../site.js?v=20261112c" defer></script>
-  <script src="../../blog/blog.js?v=20261112c" defer></script>
+  <script src="../../site.js?v=20261112d" defer></script>
+  <script src="../../blog/blog.js?v=20261112d" defer></script>
 </head>
 <body>
   <main class="page">
@@ -50,8 +50,7 @@
       </nav>
       <a class="home-link" href="../">Nikola Kočović</a>
       <h1>Blog</h1>
-      <p class="lede">Pišem o svemu: fizici, muzici, hrani i svemu ostalom što mi padne na pamet. Tu su i moje tier liste.</p>
-      <p class="jump-links"><a href="#posts">Objave</a><a href="#tierlists">Tier liste</a></p>
+      <p class="lede">Pišem o fizici, muzici, hrani i svemu ostalom što mi padne na pamet, uz nekoliko rang-lista mesta za jelo u Beogradu.</p>
     </header>
 
     <section id="posts">
@@ -62,11 +61,8 @@
       </div>
     </section>
 
-    <!-- Tier liste: svi podaci su u ../../blog/tierlists.json (vidi README.md) -->
-    <section id="tierlists">
-      <h2>Tier liste</h2>
-      <div class="tierlists" id="tierlists-box"></div>
-    </section>
+    <!-- Tier lists: one section per list, built by blog.js from tierlists.json (see README.md) -->
+    <div id="tierlists"></div>
 
     <footer class="footer">
       <span>&copy; 2026 Nikola Kočović</span>
