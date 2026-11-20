@@ -1231,10 +1231,21 @@ section[hidden] {
 
 /* ---------- Footer ---------- */
 .footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px 24px;
   border-top: 1px solid var(--rule);
   padding-top: 24px;
   font-size: 0.875rem;
   color: var(--muted);
+}
+
+/* the home page signs off with a way to get in touch */
+.footer-hello {
+  margin: 0;
+  color: var(--text);
 }
 
 /* ---------- Motion ---------- */

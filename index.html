@@ -20,7 +20,7 @@
   <!-- who this site is about, for search engines -->
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Person", "@id": "https://nkocovic.github.io/#me", "name": "Nikola Kočović", "url": "https://nkocovic.github.io/", "image": "https://nkocovic.github.io/images/nikola.jpg", "sameAs": ["https://github.com/NKocovic"], "affiliation": {"@type": "EducationalOrganization", "name": "Mathematical Grammar School", "address": {"@type": "PostalAddress", "addressLocality": "Belgrade", "addressCountry": "RS"}}, "award": "Silver medal, International Physics Olympiad 2026"}</script>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=20261112d">
+  <link rel="stylesheet" href="style.css?v=20261120">
   <script>
     // the theme picked with the light/dark switch, if any, before the first paint
     try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (err) {}
@@ -30,15 +30,21 @@
     // Arriving from another page of the site: skip the header's load animation, the page fade covers it.
     addEventListener('pagereveal', function (e) {
       if (!e.viewTransition) return;
-      e.viewTransition.ready.catch(function () {}); // a skipped transition (e.g. a quick second click) is fine
+      // a skipped or aborted transition (e.g. a quick second click) is fine: keep it out of the console
+      e.viewTransition.ready.catch(function () {});
+      e.viewTransition.finished.catch(function () {});
+      e.viewTransition.updateCallbackDone.catch(function () {});
       document.documentElement.classList.add('no-intro');
     });
     addEventListener('pageswap', function (e) {
-      if (e.viewTransition) e.viewTransition.ready.catch(function () {});
+      if (!e.viewTransition) return;
+      e.viewTransition.ready.catch(function () {});
+      e.viewTransition.finished.catch(function () {});
+      e.viewTransition.updateCallbackDone.catch(function () {});
     });
   </script>
-  <script src="site.js?v=20261112d" defer></script>
-  <script src="sushi.js?v=20261112d" defer></script>
+  <script src="site.js?v=20261120" defer></script>
+  <script src="sushi.js?v=20261120" defer></script>
 </head>
 <body>
   <!-- English version. The Serbian one is sr/index.html: keep the two in step when you edit either. -->
@@ -55,7 +61,7 @@
       </nav>
       <span class="portrait"><img src="images/nikola.jpg" alt="Nikola Kočović" width="112" height="112" decoding="async"></span>
       <h1 class="site-name">Nikola Kočović</h1>
-      <p class="lede">High school student in Belgrade, applying for undergraduate study. Into physics, music and good food.</p>
+      <p class="lede">High school student in Belgrade and IPhO 2026 silver medallist, applying for undergraduate study. Into physics, music and good food.</p>
       <ul class="links">
         <li><a href="mailto:koljakocovic1@gmail.com">Email</a></li>
         <li><a href="https://github.com/NKocovic">GitHub</a></li>
@@ -120,10 +126,10 @@
       <h2>Blog</h2>
       <div>
         <ul class="entries" id="latest-posts" data-posts="blog/" data-link="blog/" hidden></ul>
-        <p class="teaser" id="blog-teaser">Notes on physics, music, food and everything else.</p>
+        <p class="teaser" id="blog-teaser">No posts yet. In the meantime: where I'd eat in Belgrade, ranked.</p>
         <p class="cta-links">
-          <a class="btn" href="blog/">Read the blog <span class="arrow" aria-hidden="true">→</span></a>
-          <a href="blog/#tierlists">Tier lists <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn" href="blog/#tierlists">Where to eat in Belgrade <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="blog/">The blog <span class="arrow" aria-hidden="true">→</span></a>
         </p>
       </div>
     </section>
@@ -287,7 +293,7 @@
             <span class="meta">Sep 2026</span>
           </div>
           <p>Phasor diagrams and Fourier optics. Written with Luka Smiljanić.</p>
-          <p class="entry-links"><a href="handouts/W1-wave-optics.pdf">English</a></p>
+          <p class="entry-links"><a href="handouts/W1-wave-optics.pdf">PDF, English</a></p>
         </li>
         <li>
           <div class="entry-head">
@@ -300,7 +306,7 @@
             <span class="meta">May 2026</span>
           </div>
           <p>Preparation for the Balkan Physics Olympiad.</p>
-          <p class="entry-links"><a href="handouts/E1-electrostatics-en.pdf">English</a><a href="handouts/E1-elektrostatika-sr.pdf" hreflang="sr">Srpski</a></p>
+          <p class="entry-links"><a href="handouts/E1-electrostatics-en.pdf">PDF, English</a><a href="handouts/E1-elektrostatika-sr.pdf" hreflang="sr">PDF, Serbian</a></p>
         </li>
       </ul>
     </section>
@@ -315,7 +321,7 @@
             <span class="meta">May 2026</span>
           </div>
           <p>Why a ring dropped into water shoots up a jet, and how high it goes. My reporter presentation at the Serbian Young Physicists&#39; Tournament (SYPT), team Quantum Dots.</p>
-          <p class="entry-links"><a href="projects/ring-fountain-sypt-2026.pdf">English</a></p>
+          <p class="entry-links"><a href="projects/ring-fountain-sypt-2026.pdf">Slides (PDF)</a></p>
         </li>
       </ul>
     </section>
@@ -361,6 +367,7 @@
     </section>
 
     <footer class="footer">
+      <p class="footer-hello">Made it to the bottom? Say hi: <a href="mailto:koljakocovic1@gmail.com">Email</a> · <a href="https://github.com/NKocovic">GitHub</a> · <a href="cv.pdf">CV</a></p>
       <span>&copy; 2026 Nikola Kočović</span>
     </footer>
 

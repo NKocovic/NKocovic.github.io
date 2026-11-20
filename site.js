@@ -303,7 +303,9 @@
       if (reduce || !document.startViewTransition) return apply(next);
       root.classList.add('theme-switch');
       var done = function () { root.classList.remove('theme-switch'); };
-      document.startViewTransition(function () { apply(next); }).finished.then(done, done);
+      var vt = document.startViewTransition(function () { apply(next); });
+      vt.ready.catch(function () {});
+      vt.finished.then(done, done);
     });
     label();
     nav.appendChild(btn);
