@@ -106,9 +106,9 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--sans);
-  font-size: 16px;
-  line-height: 1.65;
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -174,8 +174,8 @@ h1 {
 .lede {
   font-size: 1.125rem;
   color: var(--muted);
-  max-width: 34em;
-  margin: 0 0 24px;
+  max-width: 32em;
+  margin: 0 0 20px;
 }
 
 .links {
@@ -194,9 +194,8 @@ h1 {
   right: 24px;
   display: flex;
   align-items: center;
-  gap: 24px;
-  font-size: 0.8125rem;
-  letter-spacing: 0.06em;
+  gap: 22px;
+  font-size: 0.9375rem;
   view-transition-name: top-nav;
 }
 
@@ -210,28 +209,6 @@ h1 {
   text-decoration: none;
 }
 
-/* the Blog link is a pill so it stands out from the language switch */
-.top-nav .nav-blog {
-  padding: 4px 14px;
-  border: 1px solid var(--text);
-  border-radius: 999px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-decoration: none;
-  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
-}
-
-.top-nav .nav-blog:hover,
-.top-nav .nav-blog:focus-visible {
-  background: var(--text);
-  color: var(--bg);
-}
-
-.top-nav .nav-blog[aria-current] {
-  border-color: var(--rule);
-  background: none;
-  color: var(--muted);
-}
 
 /* small name, top left, on the blog pages */
 .home-link {
@@ -254,11 +231,9 @@ section {
 
 h2 {
   margin: 0;
-  padding-top: 3px;
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  line-height: inherit;
   color: var(--muted);
 }
 
@@ -314,15 +289,10 @@ h2 {
 
 .tag {
   display: inline-block;
-  margin-left: 8px;
-  padding: 0 5px;
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  font-size: 0.6875rem;
+  margin-left: 6px;
+  font-size: 0.875rem;
   font-weight: 400;
-  letter-spacing: 0.08em;
   color: var(--muted);
-  vertical-align: 2px;
 }
 
 .empty {
@@ -550,7 +520,6 @@ h2 {
   flex-wrap: wrap;
   gap: 8px 28px;
   margin: 0;
-  font-weight: 500;
 }
 
 .cta-links a {
@@ -661,11 +630,7 @@ section[hidden] {
 }
 
 .place-try-label {
-  margin-right: 8px;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  margin-right: 6px;
   color: var(--muted);
 }
 
@@ -1099,22 +1064,9 @@ section[hidden] {
 }
 
 /* ---------- Buttons and small link rows ---------- */
+/* the main link of a section: plain, with an arrow */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 18px;
-  border: 1px solid var(--text);
-  border-radius: 999px;
-  font-weight: 500;
   text-decoration: none;
-  transition: background-color 0.25s ease, color 0.25s ease;
-}
-
-.btn:hover,
-.btn:focus-visible {
-  background: var(--text);
-  color: var(--bg);
 }
 
 .cta-links {
@@ -1249,45 +1201,6 @@ section[hidden] {
 }
 
 /* ---------- Motion ---------- */
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* the header settles in on load */
-.intro > * {
-  animation: rise 0.9s var(--ease-out) both;
-}
-
-.intro > :nth-child(2) { animation-delay: 70ms; }
-.intro > :nth-child(3) { animation-delay: 140ms; }
-.intro > :nth-child(4) { animation-delay: 210ms; }
-.intro > :nth-child(5) { animation-delay: 280ms; }
-
-/* sections fade up as they scroll into view (site.js adds .is-in) */
-.js main > section,
-.js main > article,
-.js .footer {
-  transition: opacity 0.9s ease, transform 0.9s var(--ease-out);
-  transition-delay: var(--delay, 0ms);
-}
-
-.js main > section:not(.is-in),
-.js main > article:not(.is-in),
-.js .footer:not(.is-in) {
-  opacity: 0;
-  transform: translateY(6px);
-}
-
-.js .instant {
-  transition: none;
-}
 
 /* arriving from another page of the site: let the page transition do the work */
 .no-intro .intro > * {
@@ -1485,8 +1398,6 @@ h1.site-name {
 }
 
 .lost .code {
-  font-size: 0.8125rem;
-  letter-spacing: 0.06em;
   color: var(--muted);
   margin: 0 0 12px;
 }
