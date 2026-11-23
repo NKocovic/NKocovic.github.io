@@ -1,0 +1,32 @@
+# Refreshes the encrypted schedule for /now/ every 15 minutes.
+# Needs two repository secrets: CAL_ICS_URL and NOW_PASSWORD.
+# The data goes to the separate "now-data" branch, so main's history stays clean.
+name: Update /now/ schedule
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: now-data
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q icalendar recurring-ical-events cryptography
+      - name: Build encrypted schedule
+        env:
+          CAL_ICS_URL: ${{ secrets.CAL_ICS_URL }}
+          NOW_PASSWORD: ${{ secrets.NOW_PASSWORD }}
+        run: python scripts/now_build.py "$RUNNER_TEMP/schedule.json"
+      - name: Publish to now-data branch
+        run: |
+          cd "$RUNNER_TEMP" && mkdir pub && cd pub && git init -q -b now-data
+          cp ../schedule.json .
+          git add schedule.json
+          git -c user.name=github-actions -c user.email=41898282+github-actions[bot]@users.noreply.github.com commit -qm "Update schedule"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" now-data
