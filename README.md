@@ -16,6 +16,7 @@ Nikola Kočović's personal website. Plain HTML and CSS, with no build step.
 | `handouts/` | Handout PDFs |
 | `projects/` | Project PDFs (e.g. the SYPT Ring Fountain presentation) |
 | `404.html` | The page shown for a link that doesn't exist |
+| `now/` | Private "what now" page: current and next calendar event, behind a password (see below) |
 | `og.png` | The picture shown when a link to the site is shared |
 | `sitemap.xml`, `robots.txt` | Tell search engines which pages exist |
 | `cv.pdf`, `cv-sr.pdf` | CV, English and Serbian |
@@ -88,6 +89,15 @@ Every page loads them with a version label, e.g. `style.css?v=20261122`. Phones 
 keep old copies for a while, so after editing either, change that label to today's date on **every
 page**: `index.html`, `sr/index.html`, `blog/index.html`, `blog/post.html`, `sr/blog/index.html`,
 `sr/blog/post.html` and `404.html`. A search-and-replace of the old label across the folder does it.
+
+## The private /now/ page
+
+`nkocovic.github.io/now/` shows what's on the Google Calendar right now and what's next. It isn't linked anywhere and isn't indexed.
+Every 15 minutes, `.github/workflows/now.yml` runs `scripts/now_build.py`. The script reads the calendar's private iCal feed, encrypts the next week with a password and puts it on the `now-data` branch. The page asks for the password once and remembers it on that device.
+
+It needs two repository secrets (Settings → Secrets and variables → Actions):
+- `CAL_ICS_URL`: Google Calendar → Settings → your calendar → Integrate calendar → **Secret address in iCal format**
+- `NOW_PASSWORD`: the password you type on the page. Use a long one, because the encrypted file is public.
 
 ## Previewing locally
 
