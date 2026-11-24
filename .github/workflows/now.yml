@@ -30,6 +30,7 @@ jobs:
         env:
           CAL_ICS_URL: ${{ secrets.CAL_ICS_URL }}
           NOW_PASSWORD: ${{ secrets.NOW_PASSWORD }}
+          GOALS_TOKEN: ${{ secrets.GOALS_TOKEN }}
           PUSH_URL: https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git
         run: |
           end=$(( $(date +%s) + 330 * 60 ))

@@ -1,0 +1,37 @@
+# Adds goals to /now/ from GitHub (Actions → Add /now/ goals → Run workflow).
+# The goals are stored encrypted on the "now-goals" branch.
+name: Add /now/ goals
+on:
+  workflow_dispatch:
+    inputs:
+      add:
+        description: 'JSON list, e.g. [{"t": "Finish essay", "d": "2026-12-31"}]'
+        required: true
+permissions:
+  contents: write
+concurrency: now-goals
+jobs:
+  add:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q cryptography
+      - name: Add goals
+        env:
+          NOW_PASSWORD: ${{ secrets.NOW_PASSWORD }}
+          GOALS_ADD: ${{ inputs.add }}
+          PUSH_URL: https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git
+        run: |
+          mkdir "$RUNNER_TEMP/g" && cd "$RUNNER_TEMP/g"
+          if git ls-remote --exit-code "$PUSH_URL" now-goals >/dev/null; then
+            git init -q && git fetch -q --depth 1 "$PUSH_URL" now-goals && git checkout -q -b now-goals FETCH_HEAD
+          else
+            git init -q -b now-goals
+          fi
+          python "$GITHUB_WORKSPACE/scripts/now_goals.py" goals.json
+          git add goals.json
+          git -c user.name=github-actions -c user.email=41898282+github-actions[bot]@users.noreply.github.com commit -qm "Update goals"
+          git push -q "$PUSH_URL" now-goals

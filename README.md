@@ -98,6 +98,9 @@ Every 10 minutes, `.github/workflows/now.yml` runs `scripts/now_build.py`. The s
 It needs two repository secrets (Settings → Secrets and variables → Actions):
 - `CAL_ICS_URL`: Google Calendar → Settings → your calendar → Integrate calendar → **Secret address in iCal format**
 - `NOW_PASSWORD`: the password you type on the page. Use a long one, because the encrypted file is public.
+- `GOALS_TOKEN` (for adding goals on the page): a fine-grained token for this repo only, with **Contents: Read and write**. It travels to the page inside the encrypted file.
+
+The Goals list lives encrypted in `goals.json` on the `now-goals` branch. Add goals on the page, or with Actions → *Add /now/ goals* → Run workflow.
 
 ## Previewing locally
 
