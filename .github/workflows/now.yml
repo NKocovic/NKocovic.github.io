@@ -1,32 +1,49 @@
-# Refreshes the encrypted schedule for /now/ every 15 minutes.
+# Keeps the encrypted schedule for /now/ fresh.
 # Needs two repository secrets: CAL_ICS_URL and NOW_PASSWORD.
 # The data goes to the separate "now-data" branch, so main's history stays clean.
+#
+# GitHub's own schedule is unreliable (it ran once in 18 hours), so each run
+# loops: it rebuilds every 10 minutes for about 5.5 hours, then starts the next
+# run itself. The cron below only restarts the loop if it ever stops.
 name: Update /now/ schedule
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "7 * * * *"
   workflow_dispatch:
 permissions:
   contents: write
-concurrency: now-data
+  actions: write
+concurrency:
+  group: now-data
+  cancel-in-progress: false
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: pip install -q icalendar recurring-ical-events cryptography
-      - name: Build encrypted schedule
+      - name: Rebuild every 10 minutes
         env:
           CAL_ICS_URL: ${{ secrets.CAL_ICS_URL }}
           NOW_PASSWORD: ${{ secrets.NOW_PASSWORD }}
-        run: python scripts/now_build.py "$RUNNER_TEMP/schedule.json"
-      - name: Publish to now-data branch
+          PUSH_URL: https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git
         run: |
-          cd "$RUNNER_TEMP" && mkdir pub && cd pub && git init -q -b now-data
-          cp ../schedule.json .
-          git add schedule.json
-          git -c user.name=github-actions -c user.email=41898282+github-actions[bot]@users.noreply.github.com commit -qm "Update schedule"
-          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" now-data
+          end=$(( $(date +%s) + 330 * 60 ))
+          while [ "$(date +%s)" -lt "$end" ]; do
+            rm -rf "$RUNNER_TEMP/pub" && mkdir "$RUNNER_TEMP/pub"
+            if python scripts/now_build.py "$RUNNER_TEMP/pub/schedule.json"; then
+              ( cd "$RUNNER_TEMP/pub" && git init -q -b now-data && git add schedule.json \
+                && git -c user.name=github-actions -c user.email=41898282+github-actions[bot]@users.noreply.github.com commit -qm "Update schedule" \
+                && git push -qf "$PUSH_URL" now-data ) || echo "push failed, retrying next round"
+            fi
+            sleep 600
+          done
+      - name: Start the next run
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run now.yml -R "${{ github.repository }}" --ref "${{ github.ref_name }}"

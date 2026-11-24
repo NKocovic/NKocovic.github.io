@@ -36,5 +36,6 @@ key = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=ITE
 ct = AESGCM(key).encrypt(iv, plain, None)
 b64 = lambda b: base64.b64encode(b).decode()
 with open(out, "w") as f:
-    json.dump({"iter": ITERATIONS, "salt": b64(salt), "iv": b64(iv), "ct": b64(ct)}, f)
+    # "built" is in the clear so a stale feed is easy to spot without the password
+    json.dump({"built": int(now.timestamp() * 1000), "iter": ITERATIONS, "salt": b64(salt), "iv": b64(iv), "ct": b64(ct)}, f)
 print(f"{len(events)} events")

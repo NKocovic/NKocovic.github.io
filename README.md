@@ -93,7 +93,7 @@ page**: `index.html`, `sr/index.html`, `blog/index.html`, `blog/post.html`, `sr/
 ## The private /now/ page
 
 `nkocovic.github.io/now/` shows what's on the Google Calendar right now and what's next. It isn't linked anywhere and isn't indexed.
-Every 15 minutes, `.github/workflows/now.yml` runs `scripts/now_build.py`. The script reads the calendar's private iCal feed, encrypts the next week with a password and puts it on the `now-data` branch. The page asks for the password once and remembers it on that device.
+Every 10 minutes, `.github/workflows/now.yml` runs `scripts/now_build.py`. The script reads the calendar's private iCal feed, encrypts the next week with a password and puts it on the `now-data` branch. The page asks for the password once and remembers it on that device.
 
 It needs two repository secrets (Settings → Secrets and variables → Actions):
 - `CAL_ICS_URL`: Google Calendar → Settings → your calendar → Integrate calendar → **Secret address in iCal format**
